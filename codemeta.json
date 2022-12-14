@@ -2,12 +2,12 @@
     "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
     "@type": "SoftwareSourceCode",
     "license": "https://spdx.org/licenses/BSD-3-Clause",
-    "codeRepository": "git+https://github.com/janelia-ros/weigh_station_ros.git",
+    "codeRepository": "git+https://github.com/janelia-ros/weigher_ros.git",
     "dateCreated": "2022-12-14",
     "dateModified": "2022-12-14",
-    "name": "weigh_station",
+    "name": "weigher",
     "version": "0.1.0",
-    "description": "Rat City weigh station ROS 2 code for the Janelia Gowan Lab.",
+    "description": "Rat City weigher ROS 2 code for the Janelia Gowan Lab.",
     "programmingLanguage": [
         "Python 3"
     ],

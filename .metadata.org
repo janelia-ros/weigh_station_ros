@@ -11,12 +11,12 @@
 
 #+NAME: name
 #+BEGIN_SRC text :exports none :noweb yes
-weigh_station
+weigher
 #+END_SRC
 
 #+NAME: repository-name
 #+BEGIN_SRC text :exports none :noweb yes
-weigh_station_ros
+weigher_ros
 #+END_SRC
 
 #+NAME: version
@@ -26,7 +26,7 @@ weigh_station_ros
 
 #+NAME: description
 #+BEGIN_SRC text :exports none :noweb yes
-Rat City weigh station ROS 2 code for the Janelia Gowan Lab.
+Rat City weigher ROS 2 code for the Janelia Gowan Lab.
 #+END_SRC
 
 #+NAME: references

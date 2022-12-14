@@ -1,23 +1,23 @@
-- [About](#org858a814)
-- [Setup](#orgf4bdd39)
-- [Development](#orgeae2bb2)
+- [About](#org9206ddb)
+- [Setup](#org49eab66)
+- [Development](#orgaae5b29)
 
     <!-- This file is generated automatically from .metadata.org -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="org858a814"></a>
+<a id="org9206ddb"></a>
 
 # About
 
 ```markdown
-- Name: weigh_station
-- Description: Rat City weigh station ROS 2 code for the Janelia Gowan Lab.
+- Name: weigher
+- Description: Rat City weigher ROS 2 code for the Janelia Gowan Lab.
 - Version: 0.1.0
 - Release Date: 2022-12-14
 - Creation Date: 2022-12-14
 - License: BSD-3-Clause
-- URL: https://github.com/janelia-ros/weigh_station_ros
+- URL: https://github.com/janelia-ros/weigher_ros
 - Author: Peter Polidoro
 - Email: peter@polidoro.io
 - Copyright: 2022 Howard Hughes Medical Institute
@@ -26,12 +26,12 @@
 ```
 
 
-<a id="orgf4bdd39"></a>
+<a id="org49eab66"></a>
 
 # Setup
 
 
-<a id="orgeae2bb2"></a>
+<a id="orgaae5b29"></a>
 
 # Development
 
@@ -42,8 +42,8 @@
 1.  Clone repository.
 
 ```sh
-git clone https://github.com/janelia-ros/weigh_station_ros
-cd weigh_station_ros
+git clone https://github.com/janelia-ros/weigher_ros
+cd weigher_ros
 ```
 
 ```sh

@@ -8,13 +8,17 @@ GUIX-SHELL = guix time-machine -C .channels.scm -- shell --pure --check -m .mani
 GUIX-CONTAINER = guix time-machine -C .channels.scm -- shell -m .manifest.scm --container
 GUIX-CONTAINER-GUI = $(GUIX-CONTAINER) -E "^DISPLAY$$" -E "^XAUTHORITY$$" --expose="$$XAUTHORITY" --expose=/tmp/.X11-unix/ --expose=$$HOME/.Xauthority --expose=/etc/machine-id
 
-.PHONY: shell
-shell:
+.PHONY: guix-shell
+guix-shell:
 	$(GUIX-SHELL)
 
-.PHONY: container
-container:
+.PHONY: guix-container
+guix-container:
 	$(GUIX-CONTAINER)
+
+.PHONY: docker-container
+docker-container:
+	docker pull ros:humble && docker run -it ros:humble
 
 .PHONY: metadata-edits
 metadata-edits:

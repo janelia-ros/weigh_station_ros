@@ -26,7 +26,12 @@ weigher_ros
 
 #+NAME: description
 #+BEGIN_SRC text :exports none :noweb yes
-Rat City weigher ROS 2 code for the Janelia Gowan Lab.
+ROS 2 weigh scale interface.
+#+END_SRC
+
+#+NAME: ros-distribution
+#+BEGIN_SRC text :exports none :noweb yes
+humble
 #+END_SRC
 
 #+NAME: references
@@ -147,7 +152,17 @@ Python 3
 
 * Development
 
-1. Install Guix.
+1. Install Docker.
+
+   [[https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository]]
+
+2. Run Docker container.
+
+#+BEGIN_SRC sh :noweb yes
+make docker-container
+#+END_SRC
+
+3. Install Guix.
 
 [[https://guix.gnu.org/manual/en/html_node/Binary-Installation.html][Install Guix]]
 
@@ -211,7 +226,7 @@ make metadata
         (url "https://git.savannah.gnu.org/git/guix.git")
         (branch "master")
         (commit
-          "8125c22ea2b61b1bbe7acb8741f8895b4d1f6f9f")
+          "35ecbb418c03e3957ebab87af921742466fe2de9")
         (introduction
           (make-channel-introduction
             "9edb3f66fd807b096b48283debdcddccfea34bad"
@@ -239,6 +254,10 @@ make metadata
    "inkscape"))
 #+END_SRC
 
+#+BEGIN_SRC scheme :tangle Dockerfile :exports none :noweb yes
+ARG FROM_IMAGE=ros:<<ros-distribution>>
+#+END_SRC
+
 #+BEGIN_SRC text :tangle Makefile :exports none :noweb yes
 # This file is generated automatically from .metadata.org
 # File edits may be overwritten!
@@ -250,13 +269,17 @@ GUIX-SHELL = guix time-machine -C .channels.scm -- shell --pure --check -m .mani
 GUIX-CONTAINER = guix time-machine -C .channels.scm -- shell -m .manifest.scm --container
 GUIX-CONTAINER-GUI = $(GUIX-CONTAINER) -E "^DISPLAY$$" -E "^XAUTHORITY$$" --expose="$$XAUTHORITY" --expose=/tmp/.X11-unix/ --expose=$$HOME/.Xauthority --expose=/etc/machine-id
 
-.PHONY: shell
-shell:
+.PHONY: guix-shell
+guix-shell:
 	$(GUIX-SHELL)
 
-.PHONY: container
-container:
+.PHONY: guix-container
+guix-container:
 	$(GUIX-CONTAINER)
+
+.PHONY: docker-container
+docker-container:
+	docker pull ros:<<ros-distribution>> && docker run -it ros:<<ros-distribution>>
 
 .PHONY: metadata-edits
 metadata-edits:

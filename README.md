@@ -1,41 +1,45 @@
-- [About](#org9206ddb)
-- [Setup](#org49eab66)
-- [Development](#orgaae5b29)
+- [About](#org2d4e763)
+- [Setup](#orge7f4374)
+- [Development](#orgbb43f0e)
 
     <!-- This file is generated automatically from .metadata.org -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="org9206ddb"></a>
+<a id="org2d4e763"></a>
 
 # About
 
 ```markdown
 - Name: weigher
-- Description: Rat City weigher ROS 2 code for the Janelia Gowan Lab.
+- Description: ROS 2 weigh scale interface.
 - Version: 0.1.0
-- Release Date: 2022-12-14
+- Release Date: 2023-01-09
 - Creation Date: 2022-12-14
 - License: BSD-3-Clause
 - URL: https://github.com/janelia-ros/weigher_ros
 - Author: Peter Polidoro
 - Email: peter@polidoro.io
-- Copyright: 2022 Howard Hughes Medical Institute
+- Copyright: 2023 Howard Hughes Medical Institute
 - References:
   - https://github.com/janelia-pypi/loadstar_sensors_interface_python
 ```
 
 
-<a id="org49eab66"></a>
+<a id="orge7f4374"></a>
 
 # Setup
 
 
-<a id="orgaae5b29"></a>
+<a id="orgbb43f0e"></a>
 
 # Development
 
-1.  Install Guix.
+1.  Install Docker.
+    
+    <https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository>
+
+2.  Install Guix.
 
 [Install Guix](https://guix.gnu.org/manual/en/html_node/Binary-Installation.html)
 

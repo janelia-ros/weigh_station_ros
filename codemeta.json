@@ -4,10 +4,10 @@
     "license": "https://spdx.org/licenses/BSD-3-Clause",
     "codeRepository": "git+https://github.com/janelia-ros/weigher_ros.git",
     "dateCreated": "2022-12-14",
-    "dateModified": "2022-12-14",
+    "dateModified": "2023-01-09",
     "name": "weigher",
     "version": "0.1.0",
-    "description": "Rat City weigher ROS 2 code for the Janelia Gowan Lab.",
+    "description": "ROS 2 weigh scale interface.",
     "programmingLanguage": [
         "Python 3"
     ],

@@ -1,9 +1,9 @@
-#+EXPORT_FILE_NAME: README.md
+#+EXPORT_FILE_NAME: ../README.md
 #+OPTIONS: toc:1 |:t ^:nil tags:nil
 
 # Place warning at the top of the exported file
 #+BEGIN_EXAMPLE
-<!-- This file is generated automatically from .metadata.org -->
+<!-- This file is generated automatically from metadata.org -->
 <!-- File edits may be overwritten! -->
 #+END_EXAMPLE
 
@@ -185,11 +185,11 @@ make metadata
 
 * Tangled Files                                                    :noexport:
 
-#+BEGIN_SRC text :tangle AUTHORS :exports none :noweb yes
+#+BEGIN_SRC text :tangle ../AUTHORS :exports none :noweb yes
 <<author>>
 #+END_SRC
 
-#+BEGIN_SRC js :tangle codemeta.json :exports none :noweb yes
+#+BEGIN_SRC js :tangle ../codemeta.json :exports none :noweb yes
 {
     "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
     "@type": "SoftwareSourceCode",
@@ -218,8 +218,8 @@ make metadata
 }
 #+END_SRC
 
-#+BEGIN_SRC scheme :tangle .channels.scm :exports none :noweb yes
-;; This file is generated automatically from .metadata.org
+#+BEGIN_SRC scheme :tangle guix/channels.scm :exports none :noweb yes
+;; This file is generated automatically from metadata.org
 ;; File edits may be overwritten!
 (list (channel
         (name 'guix)
@@ -240,8 +240,8 @@ make metadata
           "a082913f2dcfd0aa7d1922e780880505aaf3e2d9")))
 #+END_SRC
 
-#+BEGIN_SRC scheme :tangle .manifest.scm :exports none :noweb yes
-;; This file is generated automatically from .metadata.org
+#+BEGIN_SRC scheme :tangle guix/manifest.scm :exports none :noweb yes
+;; This file is generated automatically from metadata.org
 ;; File edits may be overwritten!
 (specifications->manifest
  '("make"
@@ -254,19 +254,19 @@ make metadata
    "inkscape"))
 #+END_SRC
 
-#+BEGIN_SRC scheme :tangle Dockerfile :exports none :noweb yes
+#+BEGIN_SRC scheme :tangle dockerg/Dockerfile :exports none :noweb yes
 ARG FROM_IMAGE=ros:<<ros-distribution>>
 #+END_SRC
 
 #+BEGIN_SRC text :tangle Makefile :exports none :noweb yes
-# This file is generated automatically from .metadata.org
+# This file is generated automatically from metadata.org
 # File edits may be overwritten!
 
 .PHONY: upload
 upload: metadata package twine add clean
 
-GUIX-SHELL = guix time-machine -C .channels.scm -- shell --pure --check -m .manifest.scm
-GUIX-CONTAINER = guix time-machine -C .channels.scm -- shell -m .manifest.scm --container
+GUIX-SHELL = guix time-machine -C guix/channels.scm -- shell --pure --check -m guix/manifest.scm
+GUIX-CONTAINER = guix time-machine -C guix/channels.scm -- shell -m guix/manifest.scm --container
 GUIX-CONTAINER-GUI = $(GUIX-CONTAINER) -E "^DISPLAY$$" -E "^XAUTHORITY$$" --expose="$$XAUTHORITY" --expose=/tmp/.X11-unix/ --expose=$$HOME/.Xauthority --expose=/etc/machine-id
 
 .PHONY: guix-shell
@@ -283,15 +283,15 @@ docker-container:
 
 .PHONY: metadata-edits
 metadata-edits:
-	$(GUIX-CONTAINER-GUI) -- sh -c "emacs -q --no-site-file --no-site-lisp --no-splash -l .init.el --file .metadata.org"
+	$(GUIX-CONTAINER-GUI) -- sh -c "emacs -q --no-site-file --no-site-lisp --no-splash -l emacs/init.el --file metadata.org"
 
 .PHONY: metadata
 metadata:
-	$(GUIX-CONTAINER) -- sh -c "emacs --batch -Q  -l .init.el --eval '(process-org \".metadata.org\")'"
+	$(GUIX-CONTAINER) -- sh -c "emacs --batch -Q  -l emacs/init.el --eval '(process-org \"metadata.org\")'"
 #+END_SRC
 
-#+BEGIN_SRC scheme :tangle .init.el :exports none :noweb yes
-;; This file is generated automatically from .metadata.org
+#+BEGIN_SRC scheme :tangle emacs/init.el :exports none :noweb yes
+;; This file is generated automatically from metadata.org
 ;; File edits may be overwritten!
 (require 'org)
 
@@ -342,7 +342,7 @@ metadata:
              'my-export-filename-filter)
 #+END_SRC
 
-#+BEGIN_SRC text :tangle LICENSE :exports none :noweb yes
+#+BEGIN_SRC text :tangle ../LICENSE :exports none :noweb yes
 Janelia Open-Source Software (3-clause BSD License)
 
 Copyright <<copyright>>

@@ -24,9 +24,9 @@ class Weigher(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    minimal_publisher = MinimalPublisher()
+    weigher = Weigher()
 
-    rclpy.spin(minimal_publisher)
+    rclpy.spin(weigher)
 
     # Destroy the node explicitly
     # (optional - otherwise it will be done automatically

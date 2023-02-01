@@ -30,7 +30,3 @@ metadata-edits:
 .PHONY: metadata
 metadata:
 	$(GUIX-CONTAINER) -- sh -c "emacs --batch -Q  -l $(MAKEFILE_DIR)/emacs/init.el --eval '(process-org \"$(MAKEFILE_DIR)/metadata.org\")'"
-
-.PHONY: ros-underlay
-ros-underlay:
-	source /opt/ros/humble/setup.bash

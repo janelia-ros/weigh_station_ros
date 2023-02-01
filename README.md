@@ -1,12 +1,12 @@
-- [About](#org42b4f1c)
-- [Setup](#org53c7c85)
-- [Development](#org261af10)
+- [About](#org9d667cb)
+- [Setup](#orge87a605)
+- [Development](#org337bf80)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="org42b4f1c"></a>
+<a id="org9d667cb"></a>
 
 # About
 
@@ -29,12 +29,12 @@
 ```
 
 
-<a id="org53c7c85"></a>
+<a id="orge87a605"></a>
 
 # Setup
 
 
-<a id="org261af10"></a>
+<a id="org337bf80"></a>
 
 # Development
 
@@ -50,7 +50,7 @@
 ### Clone Repository
 
 ```sh
-git clone git+https://github.com/janelia-ros/weigher_ros.git
+git clone git@github.com:janelia-ros/weigher_ros.git
 cd weigher_ros
 ```
 
@@ -119,7 +119,7 @@ https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Creating-A-Wo
 
 ```sh
 cd ~/ros2_ws/src
-git clone git+https://github.com/janelia-ros/weigher_ros.git
+git clone git@github.com:janelia-ros/weigher_ros.git
 ```
 
 

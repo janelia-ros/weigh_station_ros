@@ -3,13 +3,13 @@
 
 # Place warning at the top of the exported file
 #+BEGIN_EXAMPLE
-<!-- This file is generated automatically from metadata.org -->
+<!-- This file is generated automatically from metadata -->
 <!-- File edits may be overwritten! -->
 #+END_EXAMPLE
 
 * Project Specific Variables                                       :noexport:
 
-#+NAME: name
+#+NAME: ros-package-name
 #+BEGIN_SRC text :exports none :noweb yes
 weigher
 #+END_SRC
@@ -372,3 +372,10 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #+END_SRC
+
+;; Local Variables:
+;; eval: (setq after-save-hook nil)
+;; eval: (setq org-confirm-babel-evaluate nil)
+;; eval: (setq tangle-external-files nil)
+;; eval: (setq python-package-dir "")
+;; End:

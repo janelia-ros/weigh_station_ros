@@ -4,8 +4,8 @@
     "license": "https://spdx.org/licenses/BSD-3-Clause",
     "codeRepository": "git+https://github.com/janelia-ros/weigher_ros.git",
     "dateCreated": "2022-12-14",
-    "dateModified": "2023-01-10",
-    "name": "weigher",
+    "dateModified": "2023-02-01",
+    "name": "",
     "version": "0.1.0",
     "description": "ROS 2 weigh scale interface.",
     "programmingLanguage": [

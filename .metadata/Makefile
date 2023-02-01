@@ -1,12 +1,15 @@
-# This file is generated automatically from metadata.org
+# This file is generated automatically from metadata
 # File edits may be overwritten!
 
 .PHONY: upload
 upload: metadata package twine add clean
 
-GUIX-SHELL = guix time-machine -C guix/channels.scm -- shell --pure --check -m guix/manifest.scm
-GUIX-CONTAINER = guix time-machine -C guix/channels.scm -- shell -m guix/manifest.scm --container
-GUIX-CONTAINER-GUI = $(GUIX-CONTAINER) -E "^DISPLAY$$" -E "^XAUTHORITY$$" --expose="$$XAUTHORITY" --expose=/tmp/.X11-unix/ --expose=$$HOME/.Xauthority --expose=/etc/machine-id
+MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
+MAKEFILE_DIR := $(notdir $(patsubst %/,%,$(dir $(MAKEFILE_PATH))))
+GUIX-TIME-MACHINE = guix time-machine -C $(MAKEFILE_DIR)/guix/channels.scm
+GUIX-SHELL = $(GUIX-TIME-MACHINE) -- shell -m $(MAKEFILE_DIR)/guix/manifest.scm
+CONTAINER = --container --preserve='^DISPLAY$$' --preserve='^TERM$$'
+GUIX-CONTAINER = $(GUIX-SHELL) $(CONTAINER)
 
 .PHONY: guix-shell
 guix-shell:
@@ -22,8 +25,8 @@ docker-container:
 
 .PHONY: metadata-edits
 metadata-edits:
-	$(GUIX-CONTAINER-GUI) -- sh -c "emacs -q --no-site-file --no-site-lisp --no-splash -l emacs/init.el --file metadata.org"
+	$(GUIX-CONTAINER) -- sh -c "emacs -q --no-site-file --no-site-lisp --no-splash -l $(MAKEFILE_DIR)/emacs/init.el --file $(MAKEFILE_DIR)/metadata.org"
 
 .PHONY: metadata
 metadata:
-	$(GUIX-CONTAINER) -- sh -c "emacs --batch -Q  -l emacs/init.el --eval '(process-org \"metadata.org\")'"
+	$(GUIX-CONTAINER) -- sh -c "emacs --batch -Q  -l $(MAKEFILE_DIR)/emacs/init.el --eval '(process-org \"$(MAKEFILE_DIR)/metadata.org\")'"

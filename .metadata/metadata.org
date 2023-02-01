@@ -134,7 +134,8 @@ Python 3
 * About
 
 #+BEGIN_SRC markdown :noweb yes
-- Name: <<name>>
+- ROS Package Name: <<ros-package-name>>
+- ROS Distribution: <<ros-distribution>>
 - Description: <<description>>
 - Version: <<version>>
 - Release Date: <<release-date>>
@@ -152,44 +153,170 @@ Python 3
 
 * Development
 
-1. Install Docker.
-
-   [[https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository]]
-
-2. Run Docker container.
-
-#+BEGIN_SRC sh :noweb yes
-make docker-container
-#+END_SRC
-
-3. Install Guix.
+** Install Guix
 
 [[https://guix.gnu.org/manual/en/html_node/Binary-Installation.html][Install Guix]]
 
-2. Clone repository.
+** Clone Repository
 
 #+BEGIN_SRC sh :noweb yes
 git clone <<repository-url>>
 cd <<repository-name>>
 #+END_SRC
 
+** Make alias
+
 #+BEGIN_SRC sh :noweb yes
-make metadata-edits
+source .metadata/.alias
 #+END_SRC
 
-4. Modify project specific variables.
+** Edit metadata.org
 
 #+BEGIN_SRC sh :noweb yes
-make metadata
+,make metadata-edits
+#+END_SRC
+
+** Tangle metadata.org
+
+#+BEGIN_SRC sh :noweb yes
+,make metadata
+#+END_SRC
+
+** Install Docker
+
+   [[https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository]]
+
+** Run Docker container
+
+#+BEGIN_SRC sh :noweb yes
+make, docker-container
 #+END_SRC
 
 * Tangled Files                                                    :noexport:
 
-#+BEGIN_SRC text :tangle ../AUTHORS :exports none :noweb yes
+#+BEGIN_SRC scheme :tangle guix/channels.scm :exports none :noweb yes
+;; This file is generated automatically from metadata
+;; File edits may be overwritten!
+(list (channel
+        (name 'guix)
+        (url "https://git.savannah.gnu.org/git/guix.git")
+        (branch "master")
+        (commit
+          "9d7a1e58f91889d5a5330d4bf9911102f2e66db9")
+        (introduction
+          (make-channel-introduction
+            "9edb3f66fd807b096b48283debdcddccfea34bad"
+            (openpgp-fingerprint
+              "BBB0 2DDF 2CEA F6A8 0D1D  E643 A2A0 6DF2 A33A 54FA"))))
+      (channel
+        (name 'guix-janelia)
+        (url "https://github.com/guix-janelia/guix-janelia.git")
+        (branch "main")
+        (commit
+          "5f2a3a1257c3a55d6e6fa14e7c49fd395da2573c")))
+#+END_SRC
+
+#+BEGIN_SRC scheme :tangle guix/manifest.scm :exports none :noweb yes
+;; This file is generated automatically from metadata
+;; File edits may be overwritten!
+(specifications->manifest
+ '("make"
+   "bash"
+   "git"
+   "emacs"
+   "emacs-org"
+   "emacs-ox-gfm"
+   "imagemagick"
+   "inkscape"))
+#+END_SRC
+
+#+BEGIN_SRC text :tangle .alias :exports none :noweb yes
+# This file is generated automatically from metadata
+# File edits may be overwritten!
+alias ,make=make\ -f\ .metadata/Makefile
+#+END_SRC
+
+#+BEGIN_SRC text :tangle Makefile :exports none :noweb yes
+# This file is generated automatically from metadata
+# File edits may be overwritten!
+
+.PHONY: upload
+upload: metadata package twine add clean
+
+MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
+MAKEFILE_DIR := $(notdir $(patsubst %/,%,$(dir $(MAKEFILE_PATH))))
+GUIX-TIME-MACHINE = guix time-machine -C $(MAKEFILE_DIR)/guix/channels.scm
+GUIX-SHELL = $(GUIX-TIME-MACHINE) -- shell -m $(MAKEFILE_DIR)/guix/manifest.scm
+CONTAINER = --container --preserve='^DISPLAY$$' --preserve='^TERM$$'
+GUIX-CONTAINER = $(GUIX-SHELL) $(CONTAINER)
+
+.PHONY: guix-shell
+guix-shell:
+	$(GUIX-SHELL)
+
+.PHONY: guix-container
+guix-container:
+	$(GUIX-CONTAINER)
+
+.PHONY: docker-container
+docker-container:
+	docker pull ros:<<ros-distribution>> && docker run -it ros:<<ros-distribution>>
+
+.PHONY: metadata-edits
+metadata-edits:
+	$(GUIX-CONTAINER) -- sh -c "emacs -q --no-site-file --no-site-lisp --no-splash -l $(MAKEFILE_DIR)/emacs/init.el --file $(MAKEFILE_DIR)/metadata.org"
+
+.PHONY: metadata
+metadata:
+	$(GUIX-CONTAINER) -- sh -c "emacs --batch -Q  -l $(MAKEFILE_DIR)/emacs/init.el --eval '(process-org \"$(MAKEFILE_DIR)/metadata.org\")'"
+#+END_SRC
+
+#+BEGIN_SRC scheme :tangle emacs/init.el :exports none :noweb yes
+;; This file is generated automatically from metadata
+;; File edits may be overwritten!
+(require 'org)
+(require 'ox-org)
+
+(eval-after-load "org"
+  '(require 'ox-gfm nil t))
+
+(setq make-backup-files nil)
+(setq org-confirm-babel-evaluate nil)
+
+(setq python-indent-guess-indent-offset t)
+(setq python-indent-guess-indent-offset-verbose nil)
+
+(defun tangle-org (org-file)
+  "Tangle org file"
+  (unless (string= "org" (file-name-extension org-file))
+    (error "INFILE must be an org file."))
+  (org-babel-tangle-file org-file))
+
+(defun export-org-to-markdown (org-file)
+  "Export org file to gfm file"
+  (unless (string= "org" (file-name-extension org-file))
+    (error "INFILE must be an org file."))
+  (let ((org-file-buffer (find-file-noselect org-file)))
+    (with-current-buffer org-file-buffer
+      (org-open-file (org-gfm-export-to-markdown)))))
+
+(defun process-org (org-file)
+  "Tangle and export org file"
+  (progn (tangle-org org-file)
+         (export-org-to-markdown org-file)))
+
+
+(setq enable-local-variables nil)
+(setq tangle-external-files t)
+#+END_SRC
+
+#+HEADER: :tangle (if tangle-external-files "../AUTHORS" "no")
+#+BEGIN_SRC text :exports none :noweb yes
 <<author>>
 #+END_SRC
 
-#+BEGIN_SRC js :tangle ../codemeta.json :exports none :noweb yes
+#+HEADER: :tangle (if tangle-external-files "../codemeta.json" "no")
+#+BEGIN_SRC js :exports none :noweb yes
 {
     "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
     "@type": "SoftwareSourceCode",
@@ -197,7 +324,7 @@ make metadata
     "codeRepository": "<<code-repository>>",
     "dateCreated": "<<creation-date>>",
     "dateModified": "<<release-date>>",
-    "name": "<<name>>",
+    "name": "<<ros-package-name>>",
     "version": "<<version>>",
     "description": "<<description>>",
     "programmingLanguage": [
@@ -218,131 +345,12 @@ make metadata
 }
 #+END_SRC
 
-#+BEGIN_SRC scheme :tangle guix/channels.scm :exports none :noweb yes
-;; This file is generated automatically from metadata.org
-;; File edits may be overwritten!
-(list (channel
-        (name 'guix)
-        (url "https://git.savannah.gnu.org/git/guix.git")
-        (branch "master")
-        (commit
-          "35ecbb418c03e3957ebab87af921742466fe2de9")
-        (introduction
-          (make-channel-introduction
-            "9edb3f66fd807b096b48283debdcddccfea34bad"
-            (openpgp-fingerprint
-              "BBB0 2DDF 2CEA F6A8 0D1D  E643 A2A0 6DF2 A33A 54FA"))))
-      (channel
-        (name 'guix-janelia)
-        (url "https://github.com/guix-janelia/guix-janelia.git")
-        (branch "main")
-        (commit
-          "a082913f2dcfd0aa7d1922e780880505aaf3e2d9")))
-#+END_SRC
-
-#+BEGIN_SRC scheme :tangle guix/manifest.scm :exports none :noweb yes
-;; This file is generated automatically from metadata.org
-;; File edits may be overwritten!
-(specifications->manifest
- '("make"
-   "bash"
-   "git"
-   "emacs"
-   "emacs-org"
-   "emacs-ox-gfm"
-   "imagemagick"
-   "inkscape"))
-#+END_SRC
-
-#+BEGIN_SRC scheme :tangle dockerg/Dockerfile :exports none :noweb yes
+#+BEGIN_SRC scheme :tangle docker/Dockerfile :exports none :noweb yes
 ARG FROM_IMAGE=ros:<<ros-distribution>>
 #+END_SRC
 
-#+BEGIN_SRC text :tangle Makefile :exports none :noweb yes
-# This file is generated automatically from metadata.org
-# File edits may be overwritten!
-
-.PHONY: upload
-upload: metadata package twine add clean
-
-GUIX-SHELL = guix time-machine -C guix/channels.scm -- shell --pure --check -m guix/manifest.scm
-GUIX-CONTAINER = guix time-machine -C guix/channels.scm -- shell -m guix/manifest.scm --container
-GUIX-CONTAINER-GUI = $(GUIX-CONTAINER) -E "^DISPLAY$$" -E "^XAUTHORITY$$" --expose="$$XAUTHORITY" --expose=/tmp/.X11-unix/ --expose=$$HOME/.Xauthority --expose=/etc/machine-id
-
-.PHONY: guix-shell
-guix-shell:
-	$(GUIX-SHELL)
-
-.PHONY: guix-container
-guix-container:
-	$(GUIX-CONTAINER)
-
-.PHONY: docker-container
-docker-container:
-	docker pull ros:<<ros-distribution>> && docker run -it ros:<<ros-distribution>>
-
-.PHONY: metadata-edits
-metadata-edits:
-	$(GUIX-CONTAINER-GUI) -- sh -c "emacs -q --no-site-file --no-site-lisp --no-splash -l emacs/init.el --file metadata.org"
-
-.PHONY: metadata
-metadata:
-	$(GUIX-CONTAINER) -- sh -c "emacs --batch -Q  -l emacs/init.el --eval '(process-org \"metadata.org\")'"
-#+END_SRC
-
-#+BEGIN_SRC scheme :tangle emacs/init.el :exports none :noweb yes
-;; This file is generated automatically from metadata.org
-;; File edits may be overwritten!
-(require 'org)
-
-(eval-after-load "org"
-  '(require 'ox-gfm nil t))
-
-(setq make-backup-files nil)
-(setq org-confirm-babel-evaluate nil)
-
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((emacs-lisp . t)
-   (lisp . t)
-   (shell . t)
-   (scheme . t)))
-
-(defun tangle-org (org-file)
-  "Tangle org file"
-  (unless (string= "org" (file-name-extension org-file))
-    (error "INFILE must be an org file."))
-  (org-babel-tangle-file org-file))
-
-(defun export-org (org-file)
-  "Export org file to gfm file"
-  (unless (string= "org" (file-name-extension org-file))
-    (error "INFILE must be an org file."))
-  (let ((org-file-buffer (find-file-noselect org-file)))
-    (with-current-buffer org-file-buffer
-      (org-open-file (org-gfm-export-to-markdown)))))
-
-(defun process-org (org-file)
-  "Tangle and export org file"
-  (progn (tangle-org org-file)
-         (export-org org-file)))
-
-(make-variable-buffer-local 'org-export-filter-final-output-functions)
-(defun my-double-blank-line-filter (output backend info)
-  (replace-regexp-in-string "^\n+" "\n" output))
-(add-to-list 'org-export-filter-final-output-functions
-             'my-double-blank-line-filter)
-(defun my-result-keyword-filter (output backend info)
-  (replace-regexp-in-string "^#[+]RESULTS:.*\n" "" output))
-(add-to-list 'org-export-filter-final-output-functions
-             'my-result-keyword-filter)
-(defun my-export-filename-filter (output backend info)
-  (replace-regexp-in-string "^#[+]EXPORT_FILE_NAME:.*\n" "" output))
-(add-to-list 'org-export-filter-final-output-functions
-             'my-export-filename-filter)
-#+END_SRC
-
-#+BEGIN_SRC text :tangle ../LICENSE :exports none :noweb yes
+#+NAME: license-text
+#+BEGIN_SRC text :exports none :noweb yes
 Janelia Open-Source Software (3-clause BSD License)
 
 Copyright <<copyright>>
@@ -371,6 +379,15 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#+END_SRC
+
+#+HEADER: :tangle (if tangle-external-files "../LICENSE" "no")
+#+BEGIN_SRC text :exports none :noweb yes
+<<license-text>>
+#+END_SRC
+
+#+BEGIN_SRC text :tangle LICENSE :exports none :noweb yes
+<<license-text>>
 #+END_SRC
 
 ;; Local Variables:

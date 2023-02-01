@@ -1,19 +1,19 @@
-- [About](#org6611531)
-- [Setup](#org30279ac)
-- [Development](#org71241a2)
+- [About](#orgca8409b)
+- [Setup](#orgf1ba567)
+- [Development](#orgfe24c95)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="org6611531"></a>
+<a id="orgca8409b"></a>
 
 # About
 
 ```markdown
 - ROS Package Names:
   - weigher
-  - weigher_interface
+  - weigher_interfaces
 - ROS Distribution: humble
 - Description: ROS 2 weigh scale interface.
 - Version: 0.1.0
@@ -29,12 +29,12 @@
 ```
 
 
-<a id="org30279ac"></a>
+<a id="orgf1ba567"></a>
 
 # Setup
 
 
-<a id="org71241a2"></a>
+<a id="orgfe24c95"></a>
 
 # Development
 
@@ -126,8 +126,7 @@ git clone https://github.com/janelia-ros/weigher_ros
 ### Source the setup files
 
 ```sh
-source /opt/ros/humble/setup.bash
-colcon build --symlink-install
+make -f .metadata/Makefile ros-underlay
 ```
 
 

@@ -12,7 +12,7 @@
 #+NAME: ros-package-names
 #+BEGIN_SRC text :exports none :noweb yes
 weigher
-weigher_interface
+weigher_interfaces
 #+END_SRC
 
 #+NAME: repository-name
@@ -228,8 +228,7 @@ git clone <<repository-url>>
 *** Source the setup files
 
 #+BEGIN_SRC sh :noweb yes
-source /opt/ros/<<ros-distribution>>/setup.bash
-colcon build --symlink-install
+make -f .metadata/Makefile ros-underlay
 #+END_SRC
 
 *** Build ROS packages
@@ -315,6 +314,10 @@ metadata-edits:
 .PHONY: metadata
 metadata:
 	$(GUIX-CONTAINER) -- sh -c "emacs --batch -Q  -l $(MAKEFILE_DIR)/emacs/init.el --eval '(process-org \"$(MAKEFILE_DIR)/metadata.org\")'"
+
+.PHONY: ros-underlay
+ros-underlay:
+	source /opt/ros/<<ros-distribution>>/setup.bash
 #+END_SRC
 
 #+BEGIN_SRC scheme :tangle emacs/init.el :exports none :noweb yes

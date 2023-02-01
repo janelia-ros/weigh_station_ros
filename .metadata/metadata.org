@@ -228,12 +228,14 @@ git clone <<git-clone-url>>
 *** Source the ROS underlay
 
 #+BEGIN_SRC sh :noweb yes
-source .metadata/setup.bash
+cd ~/ros2_ws
+source src/<<repository-name>>/.metadata/setup.bash
 #+END_SRC
 
 *** Build ROS packages
 
 #+BEGIN_SRC sh :noweb yes
+cd ~/ros2_ws
 colcon build --symlink-install
 #+END_SRC
 

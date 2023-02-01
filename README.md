@@ -1,12 +1,12 @@
-- [About](#org9d667cb)
-- [Setup](#orge87a605)
-- [Development](#org337bf80)
+- [About](#org720370e)
+- [Setup](#org5b272ee)
+- [Development](#org2483279)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="org9d667cb"></a>
+<a id="org720370e"></a>
 
 # About
 
@@ -29,12 +29,12 @@
 ```
 
 
-<a id="orge87a605"></a>
+<a id="org5b272ee"></a>
 
 # Setup
 
 
-<a id="org337bf80"></a>
+<a id="org2483279"></a>
 
 # Development
 
@@ -126,12 +126,14 @@ git clone git@github.com:janelia-ros/weigher_ros.git
 ### Source the ROS underlay
 
 ```sh
-source .metadata/setup.bash
+cd ~/ros2_ws
+source src/weigher_ros/.metadata/setup.bash
 ```
 
 
 ### Build ROS packages
 
 ```sh
+cd ~/ros2_ws
 colcon build --symlink-install
 ```

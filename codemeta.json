@@ -5,7 +5,7 @@
     "codeRepository": "git+https://github.com/janelia-ros/weigher_ros.git",
     "dateCreated": "2022-12-14",
     "dateModified": "2023-02-01",
-    "name": "weigher",
+    "name": "weigher_ros",
     "version": "0.1.0",
     "description": "ROS 2 weigh scale interface.",
     "programmingLanguage": [

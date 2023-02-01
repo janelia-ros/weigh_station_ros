@@ -1,17 +1,19 @@
-- [About](#org21504e9)
-- [Setup](#org90999d3)
-- [Development](#orge7dc7a8)
+- [About](#org87558bc)
+- [Setup](#org545c7bc)
+- [Development](#org147acef)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="org21504e9"></a>
+<a id="org87558bc"></a>
 
 # About
 
 ```markdown
-- ROS Package Name: weigher
+- ROS Package Names:
+  - weigher
+  - weigher_interface
 - ROS Distribution: humble
 - Description: ROS 2 weigh scale interface.
 - Version: 0.1.0
@@ -27,12 +29,12 @@
 ```
 
 
-<a id="org90999d3"></a>
+<a id="org545c7bc"></a>
 
 # Setup
 
 
-<a id="orge7dc7a8"></a>
+<a id="org147acef"></a>
 
 # Development
 

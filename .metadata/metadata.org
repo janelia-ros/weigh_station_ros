@@ -9,9 +9,10 @@
 
 * Project Specific Variables                                       :noexport:
 
-#+NAME: ros-package-name
+#+NAME: ros-package-names
 #+BEGIN_SRC text :exports none :noweb yes
 weigher
+weigher_interface
 #+END_SRC
 
 #+NAME: repository-name
@@ -134,7 +135,8 @@ Python 3
 * About
 
 #+BEGIN_SRC markdown :noweb yes
-- ROS Package Name: <<ros-package-name>>
+- ROS Package Names:
+  - <<ros-package-names>>
 - ROS Distribution: <<ros-distribution>>
 - Description: <<description>>
 - Version: <<version>>
@@ -324,7 +326,7 @@ metadata:
     "codeRepository": "<<code-repository>>",
     "dateCreated": "<<creation-date>>",
     "dateModified": "<<release-date>>",
-    "name": "<<ros-package-name>>",
+    "name": "<<repository-name>>",
     "version": "<<version>>",
     "description": "<<description>>",
     "programmingLanguage": [

@@ -155,43 +155,87 @@ Python 3
 
 * Development
 
-** Install Guix
+** metadata
+
+*** Install Guix
 
 [[https://guix.gnu.org/manual/en/html_node/Binary-Installation.html][Install Guix]]
 
-** Clone Repository
+*** Clone Repository
 
 #+BEGIN_SRC sh :noweb yes
 git clone <<repository-url>>
 cd <<repository-name>>
 #+END_SRC
 
-** Make alias
+*** Make alias
 
 #+BEGIN_SRC sh :noweb yes
 source .metadata/.alias
 #+END_SRC
 
-** Edit metadata.org
+*** Edit metadata.org
 
 #+BEGIN_SRC sh :noweb yes
 ,make metadata-edits
 #+END_SRC
 
-** Tangle metadata.org
+*** Tangle metadata.org
 
 #+BEGIN_SRC sh :noweb yes
 ,make metadata
 #+END_SRC
 
-** Install Docker
+** Docker
+
+*** Install Docker
 
    [[https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository]]
 
-** Run Docker container
+*** Run Docker container
 
 #+BEGIN_SRC sh :noweb yes
 make, docker-container
+#+END_SRC
+
+** Ubuntu
+
+*** Install ROS
+
+#+BEGIN_SRC text :noweb yes
+https://docs.ros.org/en/<<ros-distribution>>/Installation/Ubuntu-Install-Debians.html
+#+END_SRC
+
+*** Configure Environment
+
+#+BEGIN_SRC text :noweb yes
+https://docs.ros.org/en/<<ros-distribution>>/Installation/Ubuntu-Install-Debians.html
+#+END_SRC
+
+*** Create Workspace
+
+#+BEGIN_SRC text :noweb yes
+https://docs.ros.org/en/<<ros-distribution>>/Tutorials/Beginner-Client-Libraries/Creating-A-Workspace/Creating-A-Workspace.html
+#+END_SRC
+
+*** Clone this repository into workspace
+
+#+BEGIN_SRC sh :noweb yes
+cd ~/ros2_ws/src
+git clone <<repository-url>>
+#+END_SRC
+
+*** Source the setup files
+
+#+BEGIN_SRC sh :noweb yes
+source /opt/ros/<<ros-distribution>>/setup.bash
+colcon build --symlink-install
+#+END_SRC
+
+*** Build ROS packages
+
+#+BEGIN_SRC sh :noweb yes
+colcon build --symlink-install
 #+END_SRC
 
 * Tangled Files                                                    :noexport:

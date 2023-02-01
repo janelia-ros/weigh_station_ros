@@ -1,12 +1,12 @@
-- [About](#org87558bc)
-- [Setup](#org545c7bc)
-- [Development](#org147acef)
+- [About](#org6611531)
+- [Setup](#org30279ac)
+- [Development](#org71241a2)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="org87558bc"></a>
+<a id="org6611531"></a>
 
 # About
 
@@ -29,22 +29,25 @@
 ```
 
 
-<a id="org545c7bc"></a>
+<a id="org30279ac"></a>
 
 # Setup
 
 
-<a id="org147acef"></a>
+<a id="org71241a2"></a>
 
 # Development
 
 
-## Install Guix
+## metadata
+
+
+### Install Guix
 
 [Install Guix](https://guix.gnu.org/manual/en/html_node/Binary-Installation.html)
 
 
-## Clone Repository
+### Clone Repository
 
 ```sh
 git clone https://github.com/janelia-ros/weigher_ros
@@ -52,34 +55,84 @@ cd weigher_ros
 ```
 
 
-## Make alias
+### Make alias
 
 ```sh
 source .metadata/.alias
 ```
 
 
-## Edit metadata.org
+### Edit metadata.org
 
 ```sh
 ,make metadata-edits
 ```
 
 
-## Tangle metadata.org
+### Tangle metadata.org
 
 ```sh
 ,make metadata
 ```
 
 
-## Install Docker
+## Docker
+
+
+### Install Docker
 
 <https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository>
 
 
-## Run Docker container
+### Run Docker container
 
 ```sh
 make, docker-container
+```
+
+
+## Ubuntu
+
+
+### Install ROS
+
+```text
+https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html
+```
+
+
+### Configure Environment
+
+```text
+https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html
+```
+
+
+### Create Workspace
+
+```text
+https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Creating-A-Workspace/Creating-A-Workspace.html
+```
+
+
+### Clone this repository into workspace
+
+```sh
+cd ~/ros2_ws/src
+git clone https://github.com/janelia-ros/weigher_ros
+```
+
+
+### Source the setup files
+
+```sh
+source /opt/ros/humble/setup.bash
+colcon build --symlink-install
+```
+
+
+### Build ROS packages
+
+```sh
+colcon build --symlink-install
 ```

@@ -221,11 +221,20 @@ https://docs.ros.org/en/<<ros-distribution>>/Tutorials/Beginner-Client-Libraries
 *** Clone this repository into workspace
 
 #+BEGIN_SRC sh :noweb yes
-cd ~/ros2_ws/src
+mkdir -p ~/ros2_ws/src && cd ~/ros2_ws/src
 git clone <<git-clone-url>>
 #+END_SRC
 
-*** Source the ROS underlay
+*** Setup Python virtualenv
+
+#+BEGIN_SRC sh :noweb yes
+sudo apt install python3-venv
+cd ~/ros2_ws
+python3 -m venv venv
+touch venv/COLCON_IGNORE
+#+END_SRC
+
+*** Source the ROS underlay and activate the Python virtualenv
 
 #+BEGIN_SRC sh :noweb yes
 cd ~/ros2_ws
@@ -237,6 +246,27 @@ source src/<<repository-name>>/.metadata/setup.bash
 #+BEGIN_SRC sh :noweb yes
 cd ~/ros2_ws
 colcon build --symlink-install
+#+END_SRC
+
+*** Source the ROS overlay
+
+#+BEGIN_SRC sh :noweb yes
+cd ~/ros2_ws
+source install/setup.bash
+#+END_SRC
+
+*** Run the weigher node
+
+#+BEGIN_SRC sh :noweb yes
+ros2 run weigher weigher_node
+#+END_SRC
+
+*** Echo the weigher topic
+
+Open a new termial
+
+#+BEGIN_SRC sh :noweb yes
+ros2 topic echo /weight
 #+END_SRC
 
 * Tangled Files                                                    :noexport:
@@ -361,6 +391,7 @@ metadata:
 # This file is generated automatically from metadata
 # File edits may be overwritten!
 source /opt/ros/<<ros-distribution>>/setup.bash
+source venv/bin/activate
 #+END_SRC
 
 #+HEADER: :tangle (if tangle-external-files "../AUTHORS" "no")

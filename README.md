@@ -1,12 +1,12 @@
-- [About](#org720370e)
-- [Setup](#org5b272ee)
-- [Development](#org2483279)
+- [About](#orgbe5ce7c)
+- [Setup](#org5f29b58)
+- [Development](#org616b87f)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="org720370e"></a>
+<a id="orgbe5ce7c"></a>
 
 # About
 
@@ -17,7 +17,7 @@
 - ROS Distribution: humble
 - Description: ROS 2 weigh scale interface.
 - Version: 0.1.0
-- Release Date: 2023-02-01
+- Release Date: 2023-02-02
 - Creation Date: 2022-12-14
 - License: BSD-3-Clause
 - URL: https://github.com/janelia-ros/weigher_ros
@@ -29,12 +29,12 @@
 ```
 
 
-<a id="org5b272ee"></a>
+<a id="org5f29b58"></a>
 
 # Setup
 
 
-<a id="org2483279"></a>
+<a id="org616b87f"></a>
 
 # Development
 
@@ -118,12 +118,22 @@ https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Creating-A-Wo
 ### Clone this repository into workspace
 
 ```sh
-cd ~/ros2_ws/src
+mkdir -p ~/ros2_ws/src && cd ~/ros2_ws/src
 git clone git@github.com:janelia-ros/weigher_ros.git
 ```
 
 
-### Source the ROS underlay
+### Setup Python virtualenv
+
+```sh
+sudo apt install python3-venv
+cd ~/ros2_ws
+python3 -m venv venv
+touch venv/COLCON_IGNORE
+```
+
+
+### Source the ROS underlay and activate the Python virtualenv
 
 ```sh
 cd ~/ros2_ws
@@ -136,4 +146,28 @@ source src/weigher_ros/.metadata/setup.bash
 ```sh
 cd ~/ros2_ws
 colcon build --symlink-install
+```
+
+
+### Source the ROS overlay
+
+```sh
+cd ~/ros2_ws
+source install/setup.bash
+```
+
+
+### Run the weigher node
+
+```sh
+ros2 run weigher weigher_node
+```
+
+
+### Echo the weigher topic
+
+Open a new termial
+
+```sh
+ros2 topic echo /weight
 ```

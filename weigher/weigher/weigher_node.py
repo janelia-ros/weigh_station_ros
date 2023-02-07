@@ -3,6 +3,10 @@ from rclpy.node import Node
 
 from weigher_interfaces.msg import Weight
 
+from loadstar_sensors_interface import LoadstarSensorsInterface
+import asyncio
+
+
 
 class Weigher(Node):
 
@@ -13,7 +17,7 @@ class Weigher(Node):
         self.timer = self.create_timer(timer_period, self.timer_callback)
         self.i = 0
 
-    def timer_callback(self):
+    def sensor_value_callback(self, sensor_value):
         msg = Weight()
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.weight = self.i + 0.1

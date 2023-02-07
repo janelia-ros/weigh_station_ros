@@ -1,12 +1,12 @@
-- [About](#orgcd6c4af)
-- [Setup](#org3255518)
-- [Development](#org0de91ce)
+- [About](#org83bf643)
+- [Setup](#org69ae026)
+- [Development](#orga4c2788)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="orgcd6c4af"></a>
+<a id="org83bf643"></a>
 
 # About
 
@@ -30,12 +30,12 @@
 ```
 
 
-<a id="org3255518"></a>
+<a id="org69ae026"></a>
 
 # Setup
 
 
-<a id="org0de91ce"></a>
+<a id="orga4c2788"></a>
 
 # Development
 
@@ -122,8 +122,10 @@ git clone git@github.com:janelia-ros/weigher_ros.git
 ```sh
 sudo apt install python3-venv
 cd ~/ros2_ws
-python3 -m venv venv
-touch venv/COLCON_IGNORE
+python3 -m venv .venv
+touch .venv/COLCON_IGNORE
+source .venv/bin/activate
+pip install -r src/weigher_ros/requirements.txt
 ```
 
 

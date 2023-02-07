@@ -10,23 +10,30 @@ GUIX-TIME-MACHINE = guix time-machine -C $(MAKEFILE_DIR)/guix/channels.scm
 GUIX-SHELL = $(GUIX-TIME-MACHINE) -- shell -m $(MAKEFILE_DIR)/guix/manifest.scm
 CONTAINER = --container --preserve='^DISPLAY$$' --preserve='^TERM$$'
 GUIX-CONTAINER = $(GUIX-SHELL) $(CONTAINER)
-
-.PHONY: guix-shell
-guix-shell:
-	$(GUIX-SHELL)
+VENV-SHELL = rm -rf .venv; mkdir .venv; python3 -m venv .venv; source .venv/bin/activate
+DOCKER-IMAGE = docker build -f $(MAKEFILE_DIR)/docker/Dockerfile -t weigher_ros .
+DOCKER-CONTAINER = $(DOCKER-IMAGE); docker run -it weigher_ros
 
 .PHONY: guix-container
 guix-container:
 	$(GUIX-CONTAINER)
 
+.PHONY: requirements.txt
+requirements.txt:
+	$(GUIX-CONTAINER) -- $(VENV-SHELL);\
+	pip install loadstar_sensors_interface;\
+	pip freeze > requirements.txt;\
+	deactivate;\
+	rm -rf .venv
+
 .PHONY: docker-container
 docker-container:
-	docker pull ros:humble && docker run -it ros:humble
+	$(DOCKER-CONTAINER)
 
 .PHONY: metadata-edits
 metadata-edits:
 	$(GUIX-CONTAINER) -- sh -c "emacs -q --no-site-file --no-site-lisp --no-splash -l $(MAKEFILE_DIR)/emacs/init.el --file $(MAKEFILE_DIR)/metadata.org"
 
 .PHONY: metadata
-metadata:
+metadata: requirements.txt
 	$(GUIX-CONTAINER) -- sh -c "emacs --batch -Q  -l $(MAKEFILE_DIR)/emacs/init.el --eval '(process-org \"$(MAKEFILE_DIR)/metadata.org\")'"

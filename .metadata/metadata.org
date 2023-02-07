@@ -35,6 +35,12 @@ ROS 2 weigh scale interface.
 humble
 #+END_SRC
 
+# Place multiple python packages on one line separated by spaces
+#+NAME: python-dependency-list
+#+BEGIN_SRC text :exports none :noweb yes
+loadstar_sensors_interface
+#+END_SRC
+
 #+NAME: references
 #+BEGIN_SRC text :exports none :noweb yes
 https://github.com/janelia-pypi/loadstar_sensors_interface_python
@@ -149,6 +155,7 @@ Python 3
 - Copyright: <<copyright>>
 - References:
   - <<references>>
+- Python Dependency List: <<python-dependency-list>>
 #+END_SRC
 
 * Setup
@@ -168,22 +175,16 @@ git clone <<git-clone-url>>
 cd <<repository-name>>
 #+END_SRC
 
-*** Make alias
-
-#+BEGIN_SRC sh :noweb yes
-source .metadata/.alias
-#+END_SRC
-
 *** Edit metadata.org
 
 #+BEGIN_SRC sh :noweb yes
-,make metadata-edits
+make -f .metadata/Makefile metadata-edits
 #+END_SRC
 
 *** Tangle metadata.org
 
 #+BEGIN_SRC sh :noweb yes
-,make metadata
+make -f .metadata/Makefile metadata
 #+END_SRC
 
 ** Docker
@@ -195,7 +196,7 @@ source .metadata/.alias
 *** Run Docker container
 
 #+BEGIN_SRC sh :noweb yes
-make, docker-container
+make -f .metadata/Makefile docker-container
 #+END_SRC
 
 ** Ubuntu
@@ -279,27 +280,25 @@ ros2 topic echo /weight
         (url "https://git.savannah.gnu.org/git/guix.git")
         (branch "master")
         (commit
-          "9d7a1e58f91889d5a5330d4bf9911102f2e66db9")
+          "9a0f840b383839bd3d02b7328cf4396783f2fd90")
         (introduction
           (make-channel-introduction
             "9edb3f66fd807b096b48283debdcddccfea34bad"
             (openpgp-fingerprint
-              "BBB0 2DDF 2CEA F6A8 0D1D  E643 A2A0 6DF2 A33A 54FA"))))
-      (channel
-        (name 'guix-janelia)
-        (url "https://github.com/guix-janelia/guix-janelia.git")
-        (branch "main")
-        (commit
-          "5f2a3a1257c3a55d6e6fa14e7c49fd395da2573c")))
+              "BBB0 2DDF 2CEA F6A8 0D1D  E643 A2A0 6DF2 A33A 54FA")))))
 #+END_SRC
 
 #+BEGIN_SRC scheme :tangle guix/manifest.scm :exports none :noweb yes
 ;; This file is generated automatically from metadata
 ;; File edits may be overwritten!
 (specifications->manifest
- '("make"
+ '("coreutils"
+   "make"
    "bash"
    "git"
+   "python"
+   "python-pip"
+   "python-virtualenv"
    "emacs"
    "emacs-org"
    "emacs-ox-gfm"
@@ -326,25 +325,32 @@ GUIX-TIME-MACHINE = guix time-machine -C $(MAKEFILE_DIR)/guix/channels.scm
 GUIX-SHELL = $(GUIX-TIME-MACHINE) -- shell -m $(MAKEFILE_DIR)/guix/manifest.scm
 CONTAINER = --container --preserve='^DISPLAY$$' --preserve='^TERM$$'
 GUIX-CONTAINER = $(GUIX-SHELL) $(CONTAINER)
-
-.PHONY: guix-shell
-guix-shell:
-	$(GUIX-SHELL)
+VENV-SHELL = rm -rf .venv; mkdir .venv; python3 -m venv .venv; source .venv/bin/activate
+DOCKER-IMAGE = docker build -f $(MAKEFILE_DIR)/docker/Dockerfile -t <<repository-name>> .
+DOCKER-CONTAINER = $(DOCKER-IMAGE); docker run -it <<repository-name>>
 
 .PHONY: guix-container
 guix-container:
 	$(GUIX-CONTAINER)
 
+.PHONY: requirements.txt
+requirements.txt:
+	$(GUIX-CONTAINER) -- $(VENV-SHELL);\
+	pip install <<python-dependency-list>>;\
+	pip freeze > requirements.txt;\
+	deactivate;\
+	rm -rf .venv
+
 .PHONY: docker-container
 docker-container:
-	docker pull ros:<<ros-distribution>> && docker run -it ros:<<ros-distribution>>
+	$(DOCKER-CONTAINER)
 
 .PHONY: metadata-edits
 metadata-edits:
 	$(GUIX-CONTAINER) -- sh -c "emacs -q --no-site-file --no-site-lisp --no-splash -l $(MAKEFILE_DIR)/emacs/init.el --file $(MAKEFILE_DIR)/metadata.org"
 
 .PHONY: metadata
-metadata:
+metadata: requirements.txt
 	$(GUIX-CONTAINER) -- sh -c "emacs --batch -Q  -l $(MAKEFILE_DIR)/emacs/init.el --eval '(process-org \"$(MAKEFILE_DIR)/metadata.org\")'"
 #+END_SRC
 

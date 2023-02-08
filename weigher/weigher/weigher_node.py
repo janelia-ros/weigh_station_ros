@@ -12,28 +12,49 @@ class Weigher(Node):
 
     def __init__(self):
         super().__init__('weigher')
-        self.publisher_ = self.create_publisher(Weight, 'weight', 10)
-        timer_period = 0.5  # seconds
-        self.timer = self.create_timer(timer_period, self.timer_callback)
-        self.i = 0
+        self._publisher = self.create_publisher(Weight, 'weight', 10)
+        self._dev = LoadstarSensorsInterface()
 
-    def sensor_value_callback(self, sensor_value):
+    async def start(self):
+        await self._dev.open_high_speed_serial_connection(port='/dev/ttyUSB0')
+        self._dev.set_sensor_value_units('gram')
+        self._dev.set_units_format('.1f')
+        await self._dev.tare()
+        self._dev.start_getting_sensor_values(self.sensor_value_callback)
+
+    async def stop(self):
+        await self._dev.stop_getting_sensor_values()
+        # count = self._dev.get_sensor_value_count()
+        # duration = self._dev.get_sensor_value_duration()
+        # rate = self._dev.get_sensor_value_rate()
+        # print(f'{count} sensor values in {duration} at a rate of {rate}')
+        # await self._dev.print_device_info()
+        self.destroy_node()
+
+    async def sensor_value_callback(self, sensor_value):
         msg = Weight()
         msg.header.stamp = self.get_clock().now().to_msg()
-        msg.weight = self.i + 0.1
-        self.publisher_.publish(msg)
+        msg.weight = sensor_value.magnitude
+        self._publisher.publish(msg)
         self.get_logger().info('Publishing: "%s"' % msg.weight)
-        self.i += 1
+        await asyncio.sleep(0)
 
+
+async def async_main():
+    weigher = Weigher()
+    await weigher.start()
+
+    while rclpy.ok():
+        rclpy.spin_once(weigher, timeout_sec=0)
+        await asyncio.sleep(1e-4)
+
+    await weigher.stop()
 
 def main(args=None):
     rclpy.init(args=args)
 
-    weigher = Weigher()
+    asyncio.run(async_main())
 
-    rclpy.spin(weigher)
-
-    weigher.destroy_node()
     rclpy.shutdown()
 
 

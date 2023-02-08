@@ -138,6 +138,16 @@ Howard Hughes Medical Institute
 Python 3
 #+END_SRC
 
+#+NAME: ros-workspace-path
+#+BEGIN_SRC text :exports none :noweb yes
+~/ros2_ws
+#+END_SRC
+
+#+NAME: virtualenv-path
+#+BEGIN_SRC text :exports none :noweb yes
+.venv
+#+END_SRC
+
 * About
 
 #+BEGIN_SRC markdown :noweb yes
@@ -201,74 +211,69 @@ make -f .metadata/Makefile docker-container
 
 ** Ubuntu
 
-*** Install ROS
+*** Setup
+
+**** Install ROS
 
 #+BEGIN_SRC text :noweb yes
 https://docs.ros.org/en/<<ros-distribution>>/Installation/Ubuntu-Install-Debians.html
 #+END_SRC
 
-*** Configure Environment
+**** Create Workspace
 
 #+BEGIN_SRC text :noweb yes
-https://docs.ros.org/en/<<ros-distribution>>/Installation/Ubuntu-Install-Debians.html
+mkdir -p <<ros-workspace-path>>
 #+END_SRC
 
-*** Create Workspace
-
-#+BEGIN_SRC text :noweb yes
-https://docs.ros.org/en/<<ros-distribution>>/Tutorials/Beginner-Client-Libraries/Creating-A-Workspace/Creating-A-Workspace.html
-#+END_SRC
-
-*** Clone this repository into workspace
+**** Clone this repository into workspace
 
 #+BEGIN_SRC sh :noweb yes
-mkdir -p ~/ros2_ws/src && cd ~/ros2_ws/src
-git clone <<git-clone-url>>
+mkdir -p <<ros-workspace-path>>/src && cd <<ros-workspace-path>>/src && git clone <<git-clone-url>>
 #+END_SRC
 
-*** Setup Python virtualenv
+**** Setup Python virtualenv
 
 #+BEGIN_SRC sh :noweb yes
 sudo apt install python3-venv
-cd ~/ros2_ws
-python3 -m venv .venv
-touch .venv/COLCON_IGNORE
-source .venv/bin/activate
+cd <<ros-workspace-path>>
+python3 -m venv <<virtualenv-path>>
+touch <<virtualenv-path>>/COLCON_IGNORE
+source <<virtualenv-path>>/bin/activate
 pip install -r src/<<repository-name>>/requirements.txt
 #+END_SRC
 
-*** Source the ROS underlay and activate the Python virtualenv
+*** Build
+
+**** Source the ROS underlay and activate the Python virtualenv
 
 #+BEGIN_SRC sh :noweb yes
-cd ~/ros2_ws
-source src/<<repository-name>>/.metadata/setup.bash
+cd <<ros-workspace-path>> && source src/<<repository-name>>/.metadata/setup.bash
 #+END_SRC
 
-*** Build ROS packages
+**** Build ROS packages
 
 #+BEGIN_SRC sh :noweb yes
-cd ~/ros2_ws
-colcon build --symlink-install
+cd <<ros-workspace-path>> && colcon build --symlink-install
 #+END_SRC
 
-*** Source the ROS overlay
+*** Run
+
+**** Source the ROS underlay and overlay and activate Python virtualenv
 
 #+BEGIN_SRC sh :noweb yes
-cd ~/ros2_ws
-source install/setup.bash
+cd <<ros-workspace-path>> && source src/<<repository-name>>/.metadata/setup.bash && source install/setup.bash
 #+END_SRC
 
-*** Run the weigher node
+**** Run the weigher node
 
 #+BEGIN_SRC sh :noweb yes
 ros2 run weigher weigher_node
 #+END_SRC
 
-*** Echo the weigher topic
-
-Open a new termial
+**** Echo the weigher topic
 
 #+BEGIN_SRC sh :noweb yes
+# Open a new termial
 ros2 topic echo /weight
 #+END_SRC
 
@@ -327,7 +332,7 @@ GUIX-TIME-MACHINE = guix time-machine -C $(MAKEFILE_DIR)/guix/channels.scm
 GUIX-SHELL = $(GUIX-TIME-MACHINE) -- shell -m $(MAKEFILE_DIR)/guix/manifest.scm
 CONTAINER = --container --preserve='^DISPLAY$$' --preserve='^TERM$$'
 GUIX-CONTAINER = $(GUIX-SHELL) $(CONTAINER)
-VENV-SHELL = rm -rf .venv; mkdir .venv; python3 -m venv .venv; source .venv/bin/activate
+VENV-SHELL = rm -rf <<virtualenv-path>>; mkdir <<virtualenv-path>>; python3 -m venv <<virtualenv-path>>; source <<virtualenv-path>>/bin/activate
 DOCKER-IMAGE = docker build -f $(MAKEFILE_DIR)/docker/Dockerfile -t <<repository-name>> .
 DOCKER-CONTAINER = $(DOCKER-IMAGE); docker run -it <<repository-name>>
 
@@ -341,7 +346,7 @@ requirements.txt:
 	pip install <<python-dependency-list>>;\
 	pip freeze > requirements.txt;\
 	deactivate;\
-	rm -rf .venv
+	rm -rf <<virtualenv-path>>
 
 .PHONY: docker-container
 docker-container:
@@ -398,8 +403,12 @@ metadata: requirements.txt
 #+BEGIN_SRC text :tangle setup.bash :exports none :noweb yes
 # This file is generated automatically from metadata
 # File edits may be overwritten!
+cd <<ros-workspace-path>>
 source /opt/ros/<<ros-distribution>>/setup.bash
-source .venv/bin/activate
+source <<virtualenv-path>>/bin/activate
+cd <<virtualenv-path>>/lib/*/site-packages
+export PYTHONPATH="${PYTHONPATH}:$(pwd)"
+cd <<ros-workspace-path>>
 #+END_SRC
 
 #+HEADER: :tangle (if tangle-external-files "../AUTHORS" "no")

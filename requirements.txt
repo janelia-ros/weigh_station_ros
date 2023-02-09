@@ -1,5 +1,5 @@
 click==8.1.3
-loadstar-sensors-interface==2.0.0
+loadstar-sensors-interface==2.1.0
 Pint==0.20.1
 pyserial==3.5
 pyserial-asyncio==0.6

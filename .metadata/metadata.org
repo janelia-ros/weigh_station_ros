@@ -181,7 +181,7 @@ Python 3
 *** Clone Repository
 
 #+BEGIN_SRC sh :noweb yes
-git clone <<git-clone-url>>
+git clone <<git-clone-url>> && \
 cd <<repository-name>>
 #+END_SRC
 
@@ -219,16 +219,12 @@ make -f .metadata/Makefile docker-container
 https://docs.ros.org/en/<<ros-distribution>>/Installation/Ubuntu-Install-Debians.html
 #+END_SRC
 
-**** Create Workspace
-
-#+BEGIN_SRC text :noweb yes
-mkdir -p <<ros-workspace-path>>
-#+END_SRC
-
-**** Clone this repository into workspace
+**** Create ROS Workspace and clone this repository
 
 #+BEGIN_SRC sh :noweb yes
-mkdir -p <<ros-workspace-path>>/src && cd <<ros-workspace-path>>/src && git clone <<git-clone-url>>
+mkdir -p <<ros-workspace-path>>/src && \
+cd <<ros-workspace-path>>/src && \
+git clone <<git-clone-url>>
 #+END_SRC
 
 **** Setup Python virtualenv
@@ -244,29 +240,20 @@ pip install -r src/<<repository-name>>/requirements.txt
 
 *** Build
 
-**** Source the ROS underlay and activate the Python virtualenv
+**** Source the ROS underlay and activate the Python virtualenv and build ROS packages
 
 #+BEGIN_SRC sh :noweb yes
-cd <<ros-workspace-path>> && source src/<<repository-name>>/.metadata/setup.bash
-#+END_SRC
-
-**** Build ROS packages
-
-#+BEGIN_SRC sh :noweb yes
-cd <<ros-workspace-path>> && colcon build --symlink-install
+source <<ros-workspace-path>>/src/<<repository-name>>/.metadata/setup.bash && \
+colcon build --symlink-install
 #+END_SRC
 
 *** Run
 
-**** Source the ROS underlay and overlay and activate Python virtualenv
+**** Source the ROS underlay and overlay and activate Python virtualenv and run the weigher node
 
 #+BEGIN_SRC sh :noweb yes
-cd <<ros-workspace-path>> && source src/<<repository-name>>/.metadata/setup.bash && source install/setup.bash
-#+END_SRC
-
-**** Run the weigher node
-
-#+BEGIN_SRC sh :noweb yes
+source <<ros-workspace-path>>/src/<<repository-name>>/.metadata/setup.bash && \
+source <<ros-workspace-path>>/install/setup.bash && \
 ros2 run weigher weigher_node
 #+END_SRC
 
@@ -274,6 +261,7 @@ ros2 run weigher weigher_node
 
 #+BEGIN_SRC sh :noweb yes
 # Open a new termial
+source <<ros-workspace-path>>/install/setup.bash && \
 ros2 topic echo /weight
 #+END_SRC
 

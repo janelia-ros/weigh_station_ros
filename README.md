@@ -1,12 +1,12 @@
-- [About](#org52a18a5)
-- [Setup](#org96bbe94)
-- [Development](#org22be970)
+- [About](#org19a58a4)
+- [Setup](#org828c9d6)
+- [Development](#org6d2bf40)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="org52a18a5"></a>
+<a id="org19a58a4"></a>
 
 # About
 
@@ -17,7 +17,7 @@
 - ROS Distribution: humble
 - Description: ROS 2 weigh scale interface.
 - Version: 0.1.0
-- Release Date: 2023-02-08
+- Release Date: 2023-02-09
 - Creation Date: 2022-12-14
 - License: BSD-3-Clause
 - URL: https://github.com/janelia-ros/weigher_ros
@@ -30,12 +30,12 @@
 ```
 
 
-<a id="org96bbe94"></a>
+<a id="org828c9d6"></a>
 
 # Setup
 
 
-<a id="org22be970"></a>
+<a id="org6d2bf40"></a>
 
 # Development
 
@@ -51,7 +51,7 @@
 ### Clone Repository
 
 ```sh
-git clone git@github.com:janelia-ros/weigher_ros.git
+git clone git@github.com:janelia-ros/weigher_ros.git && \
 cd weigher_ros
 ```
 
@@ -96,19 +96,15 @@ make -f .metadata/Makefile docker-container
     https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html
     ```
 
-2.  Create Workspace
-
-    ```text
-    mkdir -p ~/ros2_ws
-    ```
-
-3.  Clone this repository into workspace
+2.  Create ROS Workspace and clone this repository
 
     ```sh
-    mkdir -p ~/ros2_ws/src && cd ~/ros2_ws/src && git clone git@github.com:janelia-ros/weigher_ros.git
+    mkdir -p ~/ros2_ws/src && \
+    cd ~/ros2_ws/src && \
+    git clone git@github.com:janelia-ros/weigher_ros.git
     ```
 
-4.  Setup Python virtualenv
+3.  Setup Python virtualenv
 
     ```sh
     sudo apt install python3-venv
@@ -122,36 +118,28 @@ make -f .metadata/Makefile docker-container
 
 ### Build
 
-1.  Source the ROS underlay and activate the Python virtualenv
+1.  Source the ROS underlay and activate the Python virtualenv and build ROS packages
 
     ```sh
-    cd ~/ros2_ws && source src/weigher_ros/.metadata/setup.bash
-    ```
-
-2.  Build ROS packages
-
-    ```sh
-    cd ~/ros2_ws && colcon build --symlink-install
+    source ~/ros2_ws/src/weigher_ros/.metadata/setup.bash && \
+    colcon build --symlink-install
     ```
 
 
 ### Run
 
-1.  Source the ROS underlay and overlay and activate Python virtualenv
+1.  Source the ROS underlay and overlay and activate Python virtualenv and run the weigher node
 
     ```sh
-    cd ~/ros2_ws && source src/weigher_ros/.metadata/setup.bash && source install/setup.bash
-    ```
-
-2.  Run the weigher node
-
-    ```sh
+    source ~/ros2_ws/src/weigher_ros/.metadata/setup.bash && \
+    source ~/ros2_ws/install/setup.bash && \
     ros2 run weigher weigher_node
     ```
 
-3.  Echo the weigher topic
+2.  Echo the weigher topic
 
     ```sh
     # Open a new termial
+    source ~/ros2_ws/install/setup.bash && \
     ros2 topic echo /weight
     ```

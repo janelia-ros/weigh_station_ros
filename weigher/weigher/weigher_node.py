@@ -24,11 +24,6 @@ class Weigher(Node):
 
     async def stop(self):
         await self._dev.stop_getting_sensor_values()
-        # count = self._dev.get_sensor_value_count()
-        # duration = self._dev.get_sensor_value_duration()
-        # rate = self._dev.get_sensor_value_rate()
-        # print(f'{count} sensor values in {duration} at a rate of {rate}')
-        # await self._dev.print_device_info()
         self.destroy_node()
 
     async def sensor_value_callback(self, sensor_value):
@@ -36,7 +31,6 @@ class Weigher(Node):
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.weight = sensor_value.magnitude
         self._publisher.publish(msg)
-        self.get_logger().info('Publishing: "%s"' % msg.weight)
         await asyncio.sleep(0)
 
 

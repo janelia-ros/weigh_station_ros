@@ -232,10 +232,7 @@ git clone <<git-clone-url>>
 #+BEGIN_SRC sh :noweb yes
 sudo apt install python3-venv
 cd <<ros-workspace-path>>
-python3 -m venv <<virtualenv-path>>
-touch <<virtualenv-path>>/COLCON_IGNORE
-source <<virtualenv-path>>/bin/activate
-pip install -r src/<<repository-name>>/requirements.txt
+make -f src/<<repository-name>>/.metadata/Makefile virtualenv
 #+END_SRC
 
 *** Build
@@ -245,8 +242,8 @@ pip install -r src/<<repository-name>>/requirements.txt
 #+BEGIN_SRC sh :noweb yes
 # build may finish with stderr warnings about deprecated setup.py install
 # if using Python 3.10 or higher
-source <<ros-workspace-path>>/src/<<repository-name>>/.metadata/setup.bash && \
-colcon build --symlink-install
+cd <<ros-workspace-path>> && \
+make -f src/<<repository-name>>/.metadata/Makefile ros-build
 #+END_SRC
 
 *** Run
@@ -256,7 +253,7 @@ colcon build --symlink-install
 #+BEGIN_SRC sh :noweb yes
 source <<ros-workspace-path>>/src/<<repository-name>>/.metadata/setup.bash && \
 source <<ros-workspace-path>>/install/setup.bash && \
-ros2 run weigher weigher_node --ros-args -p sreial_port:=/dev/ttyUSB0
+ros2 run weigher weigher_node --ros-args -p serial_port:=/dev/ttyUSB0
 #+END_SRC
 
 **** Echo the weigher topic
@@ -332,10 +329,11 @@ guix-container:
 
 .PHONY: requirements.txt
 requirements.txt:
-	$(GUIX-CONTAINER) -- $(VENV-SHELL);\
-	pip install <<python-dependency-list>>;\
-	pip freeze > requirements.txt;\
-	deactivate;\
+	rm requirements.txt;\
+	$(GUIX-CONTAINER) -- $(VENV-SHELL) &&\
+	pip install <<python-dependency-list>> &&\
+	pip freeze --local > requirements.txt &&\
+	deactivate &&\
 	rm -rf <<virtualenv-path>>
 
 .PHONY: docker-container
@@ -349,6 +347,19 @@ metadata-edits:
 .PHONY: metadata
 metadata: requirements.txt
 	$(GUIX-CONTAINER) -- sh -c "emacs --batch -Q  -l $(MAKEFILE_DIR)/emacs/init.el --eval '(process-org \"$(MAKEFILE_DIR)/metadata.org\")'"
+
+.PHONY: virtualenv
+virtualenv:
+	rm -rf <<virtualenv-path>>;\
+	python3 -m venv <<virtualenv-path>>;\
+	touch <<virtualenv-path>>/COLCON_IGNORE;\
+	source <<virtualenv-path>>/bin/activate;\
+	pip install -r src/<<repository-name>>/requirements.txt
+
+.PHONY: ros-build
+ros-build:
+	source src/<<repository-name>>/.metadata/setup.bash;\
+	colcon build --symlink-install
 #+END_SRC
 
 #+BEGIN_SRC scheme :tangle emacs/init.el :exports none :noweb yes

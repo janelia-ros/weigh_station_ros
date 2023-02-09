@@ -20,10 +20,11 @@ guix-container:
 
 .PHONY: requirements.txt
 requirements.txt:
-	$(GUIX-CONTAINER) -- $(VENV-SHELL);\
-	pip install loadstar_sensors_interface;\
-	pip freeze > requirements.txt;\
-	deactivate;\
+	rm requirements.txt;\
+	$(GUIX-CONTAINER) -- $(VENV-SHELL) &&\
+	pip install loadstar_sensors_interface &&\
+	pip freeze --local > requirements.txt &&\
+	deactivate &&\
 	rm -rf .venv
 
 .PHONY: docker-container
@@ -37,3 +38,16 @@ metadata-edits:
 .PHONY: metadata
 metadata: requirements.txt
 	$(GUIX-CONTAINER) -- sh -c "emacs --batch -Q  -l $(MAKEFILE_DIR)/emacs/init.el --eval '(process-org \"$(MAKEFILE_DIR)/metadata.org\")'"
+
+.PHONY: virtualenv
+virtualenv:
+	rm -rf .venv;\
+	python3 -m venv .venv;\
+	touch .venv/COLCON_IGNORE;\
+	source .venv/bin/activate;\
+	pip install -r src/weigher_ros/requirements.txt
+
+.PHONY: ros-build
+ros-build:
+	source src/weigher_ros/.metadata/setup.bash;\
+	colcon build --symlink-install

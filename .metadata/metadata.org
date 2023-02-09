@@ -243,6 +243,8 @@ pip install -r src/<<repository-name>>/requirements.txt
 **** Source the ROS underlay and activate the Python virtualenv and build ROS packages
 
 #+BEGIN_SRC sh :noweb yes
+# build may finish with stderr warnings about deprecated setup.py install
+# if using Python 3.10 or higher
 source <<ros-workspace-path>>/src/<<repository-name>>/.metadata/setup.bash && \
 colcon build --symlink-install
 #+END_SRC
@@ -254,7 +256,7 @@ colcon build --symlink-install
 #+BEGIN_SRC sh :noweb yes
 source <<ros-workspace-path>>/src/<<repository-name>>/.metadata/setup.bash && \
 source <<ros-workspace-path>>/install/setup.bash && \
-ros2 run weigher weigher_node
+ros2 run weigher weigher_node --ros-args -p sreial_port:=/dev/ttyUSB0
 #+END_SRC
 
 **** Echo the weigher topic

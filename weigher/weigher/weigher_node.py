@@ -12,17 +12,23 @@ class Weigher(Node):
 
     def __init__(self):
         super().__init__('weigher')
+        self.get_logger().info('Initializing Weigher Node')
+        self.declare_parameter('serial_port', '/dev/ttyUSB0')
         self._publisher = self.create_publisher(Weight, 'weight', 10)
         self._dev = LoadstarSensorsInterface()
 
-    async def start(self):
+    async def start_getting_sensor_values(self):
+        serial_port = self.get_parameter('serial_port').get_parameter_value().string_value
+        self.get_logger().info(f'start_getting_sensor_values on serial port: {serial_port}')
+        # await self._dev.open_high_speed_serial_connection(port=serial_port)
         await self._dev.open_high_speed_serial_connection(port='/dev/ttyUSB0')
         self._dev.set_sensor_value_units('gram')
         self._dev.set_units_format('.1f')
         await self._dev.tare()
         self._dev.start_getting_sensor_values(self.sensor_value_callback)
 
-    async def stop(self):
+    async def stop_getting_sensor_values(self):
+        self.get_logger().info('stop_getting_sensor_values')
         await self._dev.stop_getting_sensor_values()
         self.destroy_node()
 
@@ -36,13 +42,14 @@ class Weigher(Node):
 
 async def async_main():
     weigher = Weigher()
-    await weigher.start()
+
+    await weigher.start_getting_sensor_values()
 
     while rclpy.ok():
         rclpy.spin_once(weigher, timeout_sec=0)
         await asyncio.sleep(1e-4)
 
-    await weigher.stop()
+    await weigher.stop_getting_sensor_values()
 
 def main(args=None):
     rclpy.init(args=args)

@@ -1,12 +1,12 @@
-- [About](#org19a58a4)
-- [Setup](#org828c9d6)
-- [Development](#org6d2bf40)
+- [About](#org62e7caa)
+- [Setup](#orgef263c4)
+- [Development](#org7cd34c0)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="org19a58a4"></a>
+<a id="org62e7caa"></a>
 
 # About
 
@@ -30,12 +30,12 @@
 ```
 
 
-<a id="org828c9d6"></a>
+<a id="orgef263c4"></a>
 
 # Setup
 
 
-<a id="org6d2bf40"></a>
+<a id="org7cd34c0"></a>
 
 # Development
 
@@ -121,6 +121,8 @@ make -f .metadata/Makefile docker-container
 1.  Source the ROS underlay and activate the Python virtualenv and build ROS packages
 
     ```sh
+    # build may finish with stderr warnings about deprecated setup.py install
+    # if using Python 3.10 or higher
     source ~/ros2_ws/src/weigher_ros/.metadata/setup.bash && \
     colcon build --symlink-install
     ```
@@ -133,7 +135,7 @@ make -f .metadata/Makefile docker-container
     ```sh
     source ~/ros2_ws/src/weigher_ros/.metadata/setup.bash && \
     source ~/ros2_ws/install/setup.bash && \
-    ros2 run weigher weigher_node
+    ros2 run weigher weigher_node --ros-args -p sreial_port:=/dev/ttyUSB0
     ```
 
 2.  Echo the weigher topic

@@ -1,12 +1,12 @@
-- [About](#org9f4185b)
-- [Setup](#orge269091)
-- [Development](#org8c4daeb)
+- [About](#org82a192e)
+- [Setup](#orgc831307)
+- [Development](#orga0d50b9)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="org9f4185b"></a>
+<a id="org82a192e"></a>
 
 # About
 
@@ -30,12 +30,12 @@
 ```
 
 
-<a id="orge269091"></a>
+<a id="orgc831307"></a>
 
 # Setup
 
 
-<a id="org8c4daeb"></a>
+<a id="orga0d50b9"></a>
 
 # Development
 
@@ -169,6 +169,19 @@ make -f .metadata/Makefile docker-container
 4.  Clone Repository
 
     ```sh
-    git clone https://github.com/janelia-ros/weigher_ros.git && \
-    cd weigher_ros
+    cd ~ && \
+    git clone https://github.com/janelia-ros/weigher_ros.git
+    ```
+
+5.  Install make for metadata commands
+
+    ```sh
+    sudo apt install make
+    ```
+
+6.  Install host apt dependencies
+
+    ```sh
+    cd ~/weigher_ros && \
+    make -f .metadata/Makefile host-apt-dependencies
     ```

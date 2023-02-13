@@ -299,8 +299,21 @@ ssh weigher@weigher.local
 **** Clone Repository
 
 #+BEGIN_SRC sh :noweb yes
-git clone <<git-clone-url-https>> && \
-cd <<repository-name>>
+cd ~ && \
+git clone <<git-clone-url-https>>
+#+END_SRC
+
+**** Install make for metadata commands
+
+#+BEGIN_SRC sh :noweb yes
+sudo apt install make
+#+END_SRC
+
+**** Install host apt dependencies
+
+#+BEGIN_SRC sh :noweb yes
+cd ~/<<repository-name>> && \
+make -f .metadata/Makefile host-apt-dependencies
 #+END_SRC
 
 * Tangled Files                                                    :noexport:

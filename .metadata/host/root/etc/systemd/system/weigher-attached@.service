@@ -1,0 +1,9 @@
+[Unit]
+Description=Weigher attached
+
+[Service]
+User=weigher
+Group=weigher
+WorkingDirectory=~
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/usr/local/bin/find_weigher_then_run.py

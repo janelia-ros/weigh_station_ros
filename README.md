@@ -1,12 +1,12 @@
-- [About](#org9fca626)
-- [Setup](#orgc4d2e96)
-- [Development](#orgcfe5fa0)
+- [About](#org843736f)
+- [Setup](#org3d392fb)
+- [Development](#org2088dac)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="org9fca626"></a>
+<a id="org843736f"></a>
 
 # About
 
@@ -17,7 +17,7 @@
 - ROS Distribution: humble
 - Description: ROS 2 weigh scale interface.
 - Version: 0.1.0
-- Release Date: 2023-02-10
+- Release Date: 2023-02-13
 - Creation Date: 2022-12-14
 - License: BSD-3-Clause
 - URL: https://github.com/janelia-ros/weigher_ros
@@ -30,12 +30,12 @@
 ```
 
 
-<a id="orgc4d2e96"></a>
+<a id="org3d392fb"></a>
 
 # Setup
 
 
-<a id="orgcfe5fa0"></a>
+<a id="org2088dac"></a>
 
 # Development
 
@@ -144,27 +144,31 @@ make -f .metadata/Makefile docker-container
     ```
 
 
-## Raspberry Pi
+## Host Setup
 
 
-### Setup Raspberry Pi
+### Raspberry Pi
 
-<https://github.com/janelia-experimental-technology/raspberrypi_setup>
+1.  Setup Raspberry Pi
 
--   username: weigher
--   hostname: weigher0
+    <https://github.com/janelia-experimental-technology/raspberrypi_setup>
+    
+    -   username: weigher
+    -   hostname: weigher
 
+2.  SSH into Raspberry Pi
 
-### SSH into Raspberry Pi
+    ```sh
+    ssh weigher@weigher.local
+    ```
 
-```sh
-ssh weigher@weigher0.local
-```
+3.  Web Console
 
+    <https://weigher.lan:9090/>
 
-### Clone Repository
+4.  Clone Repository
 
-```sh
-git clone git@github.com:janelia-ros/weigher_ros.git && \
-cd weigher_ros
-```
+    ```sh
+    git clone https://github.com/janelia-ros/weigher_ros.git && \
+    cd weigher_ros
+    ```

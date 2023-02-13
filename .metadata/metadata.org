@@ -41,6 +41,11 @@ humble
 loadstar_sensors_interface
 #+END_SRC
 
+#+NAME: host-apt-dependencies
+#+BEGIN_SRC text :exports none :noweb yes
+python3-filelock
+#+END_SRC
+
 #+NAME: references
 #+BEGIN_SRC text :exports none :noweb yes
 https://github.com/janelia-pypi/loadstar_sensors_interface_python
@@ -98,9 +103,14 @@ github.com
 https://<<forge>>/<<repository-organization>>/<<repository-name>>
 #+END_SRC
 
-#+NAME: git-clone-url
+#+NAME: git-clone-url-ssh
 #+BEGIN_SRC text :exports none :noweb yes
 git@<<forge>>:<<repository-organization>>/<<repository-name>>.git
+#+END_SRC
+
+#+NAME: git-clone-url-https
+#+BEGIN_SRC text :exports none :noweb yes
+<<repository-url>>.git
 #+END_SRC
 
 #+NAME: author-given-name
@@ -181,7 +191,7 @@ Python 3
 *** Clone Repository
 
 #+BEGIN_SRC sh :noweb yes
-git clone <<git-clone-url>> && \
+git clone <<git-clone-url-ssh>> && \
 cd <<repository-name>>
 #+END_SRC
 
@@ -224,7 +234,7 @@ https://docs.ros.org/en/<<ros-distribution>>/Installation/Ubuntu-Install-Debians
 #+BEGIN_SRC sh :noweb yes
 mkdir -p <<ros-workspace-path>>/src && \
 cd <<ros-workspace-path>>/src && \
-git clone <<git-clone-url>>
+git clone <<git-clone-url-ssh>>
 #+END_SRC
 
 **** Setup Python virtualenv
@@ -264,25 +274,31 @@ source <<ros-workspace-path>>/install/setup.bash && \
 ros2 topic echo /weight
 #+END_SRC
 
-** Raspberry Pi
+** Host Setup
 
-*** Setup Raspberry Pi
+*** Raspberry Pi
+
+**** Setup Raspberry Pi
 
 [[https://github.com/janelia-experimental-technology/raspberrypi_setup]]
 
 - username: weigher
-- hostname: weigher0
+- hostname: weigher
 
-*** SSH into Raspberry Pi
+**** SSH into Raspberry Pi
 
 #+BEGIN_SRC sh :noweb yes
-ssh weigher@weigher0.local
+ssh weigher@weigher.local
 #+END_SRC
 
-*** Clone Repository
+**** Web Console
+
+[[https://weigher.lan:9090/]]
+
+**** Clone Repository
 
 #+BEGIN_SRC sh :noweb yes
-git clone <<git-clone-url>> && \
+git clone <<git-clone-url-https>> && \
 cd <<repository-name>>
 #+END_SRC
 
@@ -496,6 +512,102 @@ RUN sed --in-place --expression \
 CMD ["bash"]
 #+END_SRC
 
+#+BEGIN_SRC text :tangle COLCON_IGNORE :exports none :noweb yes
+#+END_SRC
+
+#+BEGIN_SRC python :tangle host/host_setup.py :exports none :noweb yes
+#!/usr/bin/env python3
+
+# This file is generated automatically from metadata
+# File edits may be overwritten!
+
+import os
+import click
+import subprocess
+from pathlib import Path
+
+class Docker(object):
+
+    def __init__(self,dry_run,*args,**kwargs):
+        self.dry_run = dry_run
+        self.root_name = '.metadata/host/root'
+        self.path = Path(self.root_name)
+
+    def _output(self,args):
+        print(" ".join(args))
+        if not self.dry_run:
+            subprocess.run(args)
+
+    def for_every_file(self,cmd_prefix,include_rel_path):
+        for child in self.path.rglob('*'):
+            if child.is_file():
+                cmd = []
+                cmd.extend(cmd_prefix)
+                if include_rel_path:
+                    cmd.append(str(child))
+                abs_path = '/' / child.relative_to(self.root_name)
+                cmd.append(str(abs_path))
+                self._output(cmd)
+
+    def install(self):
+        self.for_every_file(['sudo', 'cp'],include_rel_path=True)
+
+    def uninstall(self):
+        self.for_every_file(['sudo', 'rm'],include_rel_path=False)
+
+@click.group()
+@click.option('-d','--dry-run', is_flag=True)
+@click.pass_context
+def cli(ctx,dry_run):
+    if dry_run:
+        click.echo('Dry Run')
+
+    docker = Docker(dry_run)
+
+    ctx.ensure_object(dict)
+    ctx.obj['DOCKER'] = docker
+
+@cli.command()
+@click.pass_context
+def install(ctx):
+    click.echo('Installing')
+    ctx.obj['DOCKER'].install()
+
+@cli.command()
+@click.pass_context
+def uninstall(ctx):
+    click.echo('Uninstalling')
+    ctx.obj['DOCKER'].uninstall()
+
+# -----------------------------------------------------------------------------------------
+if __name__ == '__main__':
+    cli(obj={})
+#+END_SRC
+
+#+HEADER: :tangle (if tangle-external-files "host/root/etc/systemd/system/weigher-attached@.service" "no")
+#+BEGIN_SRC text :exports none :noweb yes
+[Unit]
+Description=Weigher attached
+
+[Service]
+User=weigher
+Group=weigher
+WorkingDirectory=~
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/usr/local/bin/find_weigher_then_run.py
+#+END_SRC
+
+#+HEADER: :tangle (if tangle-external-files "host/root/etc/udev/rules.d/50-ft232.rules" "no")
+#+BEGIN_SRC text :exports none :noweb yes
+# Original FT232/FT245 VID:PID
+ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", MODE="0666", ENV{ID_MM_DEVICE_IGNORE}="1", ENV{ID_MM_PORT_IGNORE}="1"
+#+END_SRC
+
+#+HEADER: :tangle (if tangle-external-files "host/root/etc/udev/rules.d/99-weigher.rules" "no")
+#+BEGIN_SRC text :exports none :noweb yes
+KERNEL=="ttyUSB*", KERNELS=="*-*.1.1:*", SYMLINK+="weigher/0", TAG+="systemd", ENV{SYSTEMD_WANTS}="weigher-attached@00.service"
+#+END_SRC
+
 #+HEADER: :tangle (if tangle-external-files "../AUTHORS" "no")
 #+BEGIN_SRC text :exports none :noweb yes
 <<author>>
@@ -563,12 +675,12 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #+END_SRC
 
-#+HEADER: :tangle (if tangle-external-files "../LICENSE" "no")
-#+BEGIN_SRC text :exports none :noweb yes
+#+BEGIN_SRC text :tangle LICENSE :exports none :noweb yes
 <<license-text>>
 #+END_SRC
 
-#+BEGIN_SRC text :tangle LICENSE :exports none :noweb yes
+#+HEADER: :tangle (if tangle-external-files "../LICENSE" "no")
+#+BEGIN_SRC text :exports none :noweb yes
 <<license-text>>
 #+END_SRC
 

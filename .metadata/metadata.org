@@ -41,9 +41,10 @@ humble
 loadstar_sensors_interface
 #+END_SRC
 
-#+NAME: host-apt-dependencies
+# Place multiple apt packages on one line separated by spaces
+#+NAME: host-apt-dependency-list
 #+BEGIN_SRC text :exports none :noweb yes
-python3-filelock
+python3-filelock python3-docker
 #+END_SRC
 
 #+NAME: references
@@ -402,6 +403,10 @@ virtualenv:
 ros-build:
 	source src/<<repository-name>>/.metadata/setup.bash;\
 	colcon build --symlink-install
+
+.PHONY: host-apt-dependencies
+host-apt-dependencies:
+	sudo apt install -y <<host-apt-dependency-list>>;\
 #+END_SRC
 
 #+BEGIN_SRC scheme :tangle emacs/init.el :exports none :noweb yes

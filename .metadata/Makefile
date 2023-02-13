@@ -55,3 +55,7 @@ virtualenv:
 ros-build:
 	source src/weigher_ros/.metadata/setup.bash;\
 	colcon build --symlink-install
+
+.PHONY: host-apt-dependencies
+host-apt-dependencies:
+	sudo apt install -y python3-filelock python3-docker;\

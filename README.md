@@ -1,12 +1,12 @@
-- [About](#org5f3042e)
-- [Setup](#org6a95676)
-- [Development](#org7728e81)
+- [About](#orgb0664e2)
+- [Setup](#org9e7893f)
+- [Development](#org63ef3c9)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="org5f3042e"></a>
+<a id="orgb0664e2"></a>
 
 # About
 
@@ -30,12 +30,12 @@
 ```
 
 
-<a id="org6a95676"></a>
+<a id="org9e7893f"></a>
 
 # Setup
 
 
-<a id="org7728e81"></a>
+<a id="org63ef3c9"></a>
 
 # Development
 
@@ -51,8 +51,7 @@
 ### Clone Repository
 
 ```sh
-git clone git@github.com:janelia-ros/weigher_ros.git && \
-cd weigher_ros
+git clone git@github.com:janelia-ros/weigher_ros.git
 ```
 
 
@@ -132,7 +131,7 @@ make -f .metadata/Makefile docker-container
     ```sh
     source ~/ros2_ws/src/weigher_ros/.metadata/setup.bash && \
     source ~/ros2_ws/install/setup.bash && \
-    ros2 run weigher weigher_node --ros-args -p serial_port:=/dev/ttyUSB0
+    ros2 launch weigher weigher_launch.py
     ```
 
 2.  Echo the weigher topic

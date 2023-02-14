@@ -1,3 +1,5 @@
+# This file is generated automatically from metadata
+# File edits may be overwritten!
 #!/usr/bin/env python3
 
 import os
@@ -31,15 +33,15 @@ class DockerController(object):
                 print('docker stop {0}'.format(container.name))
 
     def run(self):
-        image = 'y_arena_odor_controller:latest'
-        command = ['ros2','launch','y_arena_odor_controller','controller.launch.py']
+        image = 'weigher'
+        command = ['ros2','launch','','']
         detach = True
-        devs = sorted(Path('/dev').glob('ttyACM*'))
+        devs = sorted(Path('/dev').glob('ttyUSB*'))
         devices = ['{0}:{0}'.format(dev) for dev in devs]
         network_mode = 'host'
         pid_mode = 'host'
         restart_policy = {'Name':'on-failure', "MaximumRetryCount": 5}
-        volumes = {'/dev/arena':{'bind':'/dev/arena'}}
+        volumes = {'/dev':{'bind':'/dev'}}
         self._run(image=image,
                   command=command,
                   detach=detach,
@@ -60,7 +62,7 @@ def cli(dry_run):
             docker_controller.stop_all()
             docker_controller.run()
     except filelock.Timeout:
-        print('Another instance of find_arenas_then_run currently holds the lock')
+        print('Another instance of find_weigher_then_run currently holds the lock')
 
 # -----------------------------------------------------------------------------------------
 if __name__ == '__main__':

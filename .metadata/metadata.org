@@ -57,6 +57,21 @@ https://github.com/janelia-pypi/loadstar_sensors_interface_python
 2022-12-14
 #+END_SRC
 
+#+NAME: ros-launch-node
+#+BEGIN_SRC text :exports none :noweb yes
+weigher
+#+END_SRC
+
+#+NAME: ros-launch-file
+#+BEGIN_SRC text :exports none :noweb yes
+weigher_launch.py
+#+END_SRC
+
+#+NAME: docker-image-name
+#+BEGIN_SRC text :exports none :noweb yes
+weigher
+#+END_SRC
+
 * General and Derived Variables                                    :noexport:
 
 #+NAME: release-month-day
@@ -258,7 +273,7 @@ make -f src/<<repository-name>>/.metadata/Makefile ros-build
 #+BEGIN_SRC sh :noweb yes
 source <<ros-workspace-path>>/src/<<repository-name>>/.metadata/setup.bash && \
 source <<ros-workspace-path>>/install/setup.bash && \
-ros2 launch weigher weigher_launch.py
+ros2 launch <<ros-launch-node>> <<ros-launch-file>>
 #+END_SRC
 
 **** Echo the weigher topic
@@ -380,9 +395,9 @@ GUIX-SHELL = $(GUIX-TIME-MACHINE) -- shell -m $(MAKEFILE_DIR)/guix/manifest.scm
 CONTAINER = --container --preserve='^DISPLAY$$' --preserve='^TERM$$'
 GUIX-CONTAINER = $(GUIX-SHELL) $(CONTAINER)
 VENV-SHELL = rm -rf <<virtualenv-path>>; mkdir <<virtualenv-path>>; python3 -m venv <<virtualenv-path>>; source <<virtualenv-path>>/bin/activate
-DOCKER-IMAGE = docker build -f $(MAKEFILE_DIR)/docker/Dockerfile -t <<repository-name>> .
-DOCKER-IMAGE-DEBUG = docker build -f $(MAKEFILE_DIR)/docker/Dockerfile --no-cache --progress=plain -t <<repository-name>> .
-DOCKER-CONTAINER = $(DOCKER-IMAGE); docker run -it <<repository-name>>
+DOCKER-IMAGE = docker build -f $(MAKEFILE_DIR)/docker/Dockerfile -t <<docker-image-name>> .
+DOCKER-IMAGE-DEBUG = docker build -f $(MAKEFILE_DIR)/docker/Dockerfile --no-cache --progress=plain -t <<docker-image-name>> .
+DOCKER-CONTAINER = $(DOCKER-IMAGE); docker run -it <<docker-image-name>>
 
 .PHONY: guix-container
 guix-container:
@@ -538,7 +553,7 @@ RUN sed --in-place --expression \
       '$isource "$OVERLAY_WS/install/setup.bash"' \
       /ros_entrypoint.sh
 
-CMD ["ros2", "launch", "weigher", "weigher_launch.py"]
+CMD ["ros2", "launch", "<<ros-launch-node>>", "<<ros-launch-file>>"]
 #+END_SRC
 
 #+BEGIN_SRC text :tangle COLCON_IGNORE :exports none :noweb yes
@@ -632,7 +647,80 @@ ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", MODE="0666", ENV{ID_MM_DEVICE
 
 #+HEADER: :tangle (if tangle-external-files "host/root/etc/udev/rules.d/99-weigher.rules" "no")
 #+BEGIN_SRC text :exports none :noweb yes
-KERNEL=="ttyUSB*", SYMLINK+="weigher", TAG+="systemd", ENV{SYSTEMD_WANTS}="weigher-attached@00.service"
+KERNEL=="ttyUSB*", TAG+="systemd", ENV{SYSTEMD_WANTS}="weigher-attached@00.service"
+#+END_SRC
+
+#+HEADER: :tangle (if tangle-external-files "host/root/usr/local/bin/find_weigher_then_run.py" "no")
+#+BEGIN_SRC python :exports none :noweb yes
+# This file is generated automatically from metadata
+# File edits may be overwritten!
+#!/usr/bin/env python3
+
+import os
+import click
+import docker
+from pathlib import Path
+import filelock
+
+lock_path = 'docker_controller.lock'
+lock = filelock.FileLock(lock_path, timeout=1)
+
+class DockerController(object):
+
+    def __init__(self,dry_run,*args,**kwargs):
+        self.dry_run = dry_run
+        self.client = docker.from_env()
+
+    def _run(self,**kwargs):
+        if not self.dry_run:
+            self.client.containers.run(**kwargs)
+        else:
+            for key,value in kwargs.items():
+                print('docker run')
+                print(key,value)
+
+    def stop_all(self):
+        for container in self.client.containers.list():
+            if not self.dry_run:
+                container.stop()
+            else:
+                print('docker stop {0}'.format(container.name))
+
+    def run(self):
+        image = '<<docker-image-name>>'
+        command = ['ros2','launch','<<docker-launch-node>>','<<docker-launch-file>>']
+        detach = True
+        devs = sorted(Path('/dev').glob('ttyUSB*'))
+        devices = ['{0}:{0}'.format(dev) for dev in devs]
+        network_mode = 'host'
+        pid_mode = 'host'
+        restart_policy = {'Name':'on-failure', "MaximumRetryCount": 5}
+        volumes = {'/dev':{'bind':'/dev'}}
+        self._run(image=image,
+                  command=command,
+                  detach=detach,
+                  devices=devices,
+                  network_mode=network_mode,
+                  pid_mode=pid_mode,
+                  restart_policy=restart_policy,
+                  volumes=volumes)
+
+@click.command()
+@click.option('-d','--dry-run', is_flag=True)
+def cli(dry_run):
+    try:
+        with lock.acquire(timeout=1):
+            if dry_run:
+                print('Dry Run')
+            docker_controller = DockerController(dry_run)
+            docker_controller.stop_all()
+            docker_controller.run()
+    except filelock.Timeout:
+        print('Another instance of find_weigher_then_run currently holds the lock')
+
+# -----------------------------------------------------------------------------------------
+if __name__ == '__main__':
+    cli()
 #+END_SRC
 
 #+HEADER: :tangle (if tangle-external-files "../AUTHORS" "no")

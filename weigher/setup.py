@@ -23,4 +23,7 @@ setup(
             'weigher_node = weigher.weigher_node:main'
         ],
     },
+    data_files=[
+        (os.path.join('share', package_name), glob('launch/*launch.[pxy][yma]*'))
+    ]
 )

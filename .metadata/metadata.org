@@ -22,12 +22,12 @@ weigher_ros
 
 #+NAME: version
 #+BEGIN_SRC text :exports none :noweb yes
-0.1.0
+1.0.0
 #+END_SRC
 
 #+NAME: description
 #+BEGIN_SRC text :exports none :noweb yes
-ROS 2 weigh scale interface.
+This repository contains ROS 2 packages that publish weight messages from a digital scale.
 #+END_SRC
 
 #+NAME: ros-distribution
@@ -57,14 +57,24 @@ https://github.com/janelia-pypi/loadstar_sensors_interface_python
 2022-12-14
 #+END_SRC
 
-#+NAME: ros-launch-node
+#+NAME: weigher-node
 #+BEGIN_SRC text :exports none :noweb yes
 weigher
 #+END_SRC
 
-#+NAME: ros-launch-file
+#+NAME: weigher-launch-file
 #+BEGIN_SRC text :exports none :noweb yes
 weigher_launch.py
+#+END_SRC
+
+#+NAME: weigher-topic
+#+BEGIN_SRC text :exports none :noweb yes
+/weight
+#+END_SRC
+
+#+NAME: weigher-message
+#+BEGIN_SRC text :exports none :noweb yes
+Weight.msg
 #+END_SRC
 
 #+NAME: docker-image-name
@@ -177,6 +187,10 @@ Python 3
 - ROS Distribution: <<ros-distribution>>
 - Description: <<description>>
 - Version: <<version>>
+- Weigher Node: <<weigher-node>>
+- Weigher Launch File: <<weigher-launch-file>>
+- Weigher Topic: <<weigher-topic>>
+- Weigher Message: <<weigher-message>>
 - Release Date: <<release-date>>
 - Creation Date: <<creation-date>>
 - License: <<license>>
@@ -189,69 +203,81 @@ Python 3
 - Python Dependency List: <<python-dependency-list>>
 #+END_SRC
 
+* Usage
+
+** Publisher
+
+- Connect weigh scale to Raspberry Pi USB port.
+- Connect Raspberry Pi to power and Ethernet.
+
+Scale will be tared on power up and automatically begin publishing weight messages.
+
+** Subscriber
+
+On a computer connected to the same network as the Raspberry Pi, either use
+Docker or install ROS 2 to subscribe to weight messages.
+
+*** Echo weight topic on network computer
+
+**** Docker
+
+#+BEGIN_SRC sh :noweb yes
+docker run -it --net=host --pid=host <<docker-image-name>> ros2 topic echo <<weigher-topic>>
+#+END_SRC
+
+**** ROS 2 on Ubuntu
+
+#+BEGIN_SRC sh :noweb yes
+source <<ros-workspace-path>>/install/setup.bash && \
+ros2 topic echo <<weigher-topic>>
+#+END_SRC
+
+** Connect to Raspberry Pi for development and monitoring
+
+*** SSH into Raspberry Pi
+
+#+BEGIN_SRC sh :noweb yes
+ssh weigher@weigher.local
+#+END_SRC
+
+*** Web Console
+
+[[https://weigher.lan:9090/]]
+
 * Setup
 
-* Development
+** Subscriber
 
-** metadata
+*** Docker
 
-*** Install Guix
+**** Install Docker
 
-[[https://guix.gnu.org/manual/en/html_node/Binary-Installation.html][Install Guix]]
+   [[https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository]]
 
-*** Clone Repository
+**** Clone this repository
 
 #+BEGIN_SRC sh :noweb yes
 git clone <<git-clone-url-ssh>>
 #+END_SRC
 
-*** Edit metadata.org
+**** Make Docker image
 
 #+BEGIN_SRC sh :noweb yes
-make -f .metadata/Makefile metadata-edits
+cd <<repository-name>>
+docker build -f .metadata/docker/Dockerfile -t <<docker-image-name>> .
+# or
+make -f .metadata/Makefile docker-image
 #+END_SRC
 
-*** Tangle metadata.org
+*** ROS 2 on Ubuntu
 
-#+BEGIN_SRC sh :noweb yes
-make -f .metadata/Makefile metadata
-#+END_SRC
-
-** Docker
-
-*** Install Docker
-
-   [[https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository]]
-
-*** Run Docker container
-
-#+BEGIN_SRC sh :noweb yes
-make -f .metadata/Makefile docker-container
-#+END_SRC
-
-*** Run Docker container with serial port access
-
-#+BEGIN_SRC sh :noweb yes
-make -f .metadata/Makefile docker-container-port
-#+END_SRC
-
-*** Run Docker container and launch weigher
-
-#+BEGIN_SRC sh :noweb yes
-make -f .metadata/Makefile docker-launch-weigher
-#+END_SRC
-
-** Ubuntu
-
-*** Setup
-
-**** Install ROS
+**** Install ROS 2
 
 #+BEGIN_SRC text :noweb yes
 https://docs.ros.org/en/<<ros-distribution>>/Installation/Ubuntu-Install-Debians.html
 #+END_SRC
 
-**** Create ROS Workspace and clone this repository
+**** Create ROS 2 Workspace and clone this repository
 
 #+BEGIN_SRC sh :noweb yes
 mkdir -p <<ros-workspace-path>>/src && \
@@ -267,9 +293,9 @@ cd <<ros-workspace-path>>
 make -f src/<<repository-name>>/.metadata/Makefile virtualenv
 #+END_SRC
 
-*** Build
+**** Build ROS packages
 
-**** Source the ROS underlay and activate the Python virtualenv and build ROS packages
+***** Source the ROS underlay and activate the Python virtualenv and build ROS packages
 
 #+BEGIN_SRC sh :noweb yes
 # build may finish with stderr warnings about deprecated setup.py install
@@ -278,25 +304,7 @@ cd <<ros-workspace-path>> && \
 make -f src/<<repository-name>>/.metadata/Makefile ros-build
 #+END_SRC
 
-*** Run
-
-**** Source the ROS underlay and overlay and activate Python virtualenv and run the weigher node
-
-#+BEGIN_SRC sh :noweb yes
-source <<ros-workspace-path>>/src/<<repository-name>>/.metadata/setup.bash && \
-source <<ros-workspace-path>>/install/setup.bash && \
-ros2 launch <<ros-launch-node>> <<ros-launch-file>>
-#+END_SRC
-
-**** Echo the weigher topic
-
-#+BEGIN_SRC sh :noweb yes
-# Open a new termial
-source <<ros-workspace-path>>/install/setup.bash && \
-ros2 topic echo /weight
-#+END_SRC
-
-** Host Setup
+** Publisher
 
 *** Raspberry Pi
 
@@ -350,6 +358,79 @@ sudo reboot
 systemctl status weigher-attached@00.service
 systemd-analyze plot > boot_analysis.svg
 #+END_SRC
+
+* Development
+
+** Docker
+
+*** Run Docker container
+
+#+BEGIN_SRC sh :noweb yes
+make -f .metadata/Makefile docker-container
+#+END_SRC
+
+*** Run Docker container with serial port access
+
+#+BEGIN_SRC sh :noweb yes
+make -f .metadata/Makefile docker-container-port
+#+END_SRC
+
+*** Run Docker container and start publishing weight messages
+
+#+BEGIN_SRC sh :noweb yes
+make -f .metadata/Makefile docker-publish-weight
+#+END_SRC
+
+*** Run Docker container and echo weight messages
+
+#+BEGIN_SRC sh :noweb yes
+make -f .metadata/Makefile docker-echo-weight
+#+END_SRC
+
+** Ubuntu
+
+*** Run
+
+**** Source the ROS underlay and overlay and activate Python virtualenv and run the weigher node
+
+#+BEGIN_SRC sh :noweb yes
+source <<ros-workspace-path>>/src/<<repository-name>>/.metadata/setup.bash && \
+source <<ros-workspace-path>>/install/setup.bash && \
+ros2 launch <<weigher-node>> <<weigher-launch-file>>
+#+END_SRC
+
+**** Echo the weigher topic
+
+#+BEGIN_SRC sh :noweb yes
+# Open a new termial
+source <<ros-workspace-path>>/install/setup.bash && \
+ros2 topic echo <<weigher-topic>>
+#+END_SRC
+
+** Metadata
+
+*** Install Guix
+
+[[https://guix.gnu.org/manual/en/html_node/Binary-Installation.html][Install Guix]]
+
+*** Clone Repository
+
+#+BEGIN_SRC sh :noweb yes
+git clone <<git-clone-url-ssh>>
+#+END_SRC
+
+*** Edit metadata.org
+
+#+BEGIN_SRC sh :noweb yes
+make -f .metadata/Makefile metadata-edits
+#+END_SRC
+
+*** Tangle metadata.org
+
+#+BEGIN_SRC sh :noweb yes
+make -f .metadata/Makefile metadata
+#+END_SRC
+
 
 * Tangled Files                                                    :noexport:
 
@@ -469,9 +550,13 @@ DOCKER-CONTAINER-PORT = docker run -it --net=host --pid=host --device=$(PORT) <<
 docker-container-port:
 	$(DOCKER-CONTAINER-PORT)
 
-.PHONY: docker-launch-weigher
-docker-run-weigher:
-	$(DOCKER-CONTAINER-PORT) ros2 launch <<ros-launch-node>> <<ros-launch-file>>
+.PHONY: docker-publish-weight
+docker-publish-weight:
+	$(DOCKER-CONTAINER-PORT) ros2 launch <<weigher-node>> <<weigher-launch-file>>
+
+.PHONY: docker-echo-weight
+docker-echo-weight:
+	$(DOCKER-CONTAINER) ros2 topic echo <<weigher-topic>>
 #+END_SRC
 
 #+BEGIN_SRC scheme :tangle emacs/init.el :exports none :noweb yes
@@ -578,7 +663,6 @@ RUN sed --in-place --expression \
       '$isource "$OVERLAY_WS/install/setup.bash"' \
       /ros_entrypoint.sh
 
-# CMD ["ros2", "launch", "<<ros-launch-node>>", "<<ros-launch-file>>"]
 CMD ["bash"]
 #+END_SRC
 
@@ -714,7 +798,7 @@ class DockerController(object):
 
     def run(self):
         image = '<<docker-image-name>>'
-        command = ['ros2','launch','<<ros-launch-node>>','<<ros-launch-file>>']
+        command = ['ros2','launch','<<weigher-node>>','<<weigher-launch-file>>']
         detach = True
         devs = sorted(Path('/dev').glob('ttyUSB*'))
         devices = ['{0}:{0}'.format(dev) for dev in devs]

@@ -73,6 +73,10 @@ DOCKER-CONTAINER-PORT = docker run -it --net=host --pid=host --device=$(PORT) we
 docker-container-port:
 	$(DOCKER-CONTAINER-PORT)
 
-.PHONY: docker-launch-weigher
-docker-run-weigher:
+.PHONY: docker-publish-weight
+docker-publish-weight:
 	$(DOCKER-CONTAINER-PORT) ros2 launch weigher weigher_launch.py
+
+.PHONY: docker-echo-weight
+docker-echo-weight:
+	$(DOCKER-CONTAINER) ros2 topic echo /weight

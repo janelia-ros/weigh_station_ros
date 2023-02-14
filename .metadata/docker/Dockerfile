@@ -51,5 +51,4 @@ RUN sed --in-place --expression \
       '$isource "$OVERLAY_WS/install/setup.bash"' \
       /ros_entrypoint.sh
 
-#CMD ["ros2", "launch", "demo_nodes_cpp", "talker_listener.launch.py"]
-CMD ["bash"]
+CMD ["ros2", "launch", "weigher", "weigher_launch.py"]

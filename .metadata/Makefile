@@ -59,3 +59,7 @@ ros-build:
 .PHONY: host-apt-dependencies
 host-apt-dependencies:
 	sudo apt install -y python3-filelock python3-docker;\
+
+.PHONY: host-setup
+host-setup: host-apt-dependencies
+	python3 .metadata/host/host_setup.py

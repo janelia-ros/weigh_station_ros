@@ -326,7 +326,7 @@ make -f .metadata/Makefile host-apt-dependencies
         (url "https://git.savannah.gnu.org/git/guix.git")
         (branch "master")
         (commit
-          "9a0f840b383839bd3d02b7328cf4396783f2fd90")
+          "a3c6959de63c6dd91271ed5d1f15e0a7d75dee92")
         (introduction
           (make-channel-introduction
             "9edb3f66fd807b096b48283debdcddccfea34bad"
@@ -420,6 +420,10 @@ ros-build:
 .PHONY: host-apt-dependencies
 host-apt-dependencies:
 	sudo apt install -y <<host-apt-dependency-list>>;\
+
+.PHONY: host-setup
+host-setup: host-apt-dependencies
+	python3 .metadata/host/host_setup.py
 #+END_SRC
 
 #+BEGIN_SRC scheme :tangle emacs/init.el :exports none :noweb yes
@@ -534,8 +538,6 @@ CMD ["bash"]
 #+END_SRC
 
 #+BEGIN_SRC python :tangle host/host_setup.py :exports none :noweb yes
-#!/usr/bin/env python3
-
 # This file is generated automatically from metadata
 # File edits may be overwritten!
 
@@ -544,7 +546,7 @@ import click
 import subprocess
 from pathlib import Path
 
-class Docker(object):
+class HostSetup(object):
 
     def __init__(self,dry_run,*args,**kwargs):
         self.dry_run = dry_run
@@ -580,22 +582,22 @@ def cli(ctx,dry_run):
     if dry_run:
         click.echo('Dry Run')
 
-    docker = Docker(dry_run)
+    host_setup = HostSetup(dry_run)
 
     ctx.ensure_object(dict)
-    ctx.obj['DOCKER'] = docker
+    ctx.obj['HOST_SETUP'] = host_setup
 
 @cli.command()
 @click.pass_context
 def install(ctx):
     click.echo('Installing')
-    ctx.obj['DOCKER'].install()
+    ctx.obj['HOST_SETUP'].install()
 
 @cli.command()
 @click.pass_context
 def uninstall(ctx):
     click.echo('Uninstalling')
-    ctx.obj['DOCKER'].uninstall()
+    ctx.obj['HOST_SETUP'].uninstall()
 
 # -----------------------------------------------------------------------------------------
 if __name__ == '__main__':

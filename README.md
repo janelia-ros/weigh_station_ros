@@ -1,12 +1,12 @@
-- [About](#org82a192e)
-- [Setup](#orgc831307)
-- [Development](#orga0d50b9)
+- [About](#org7aff8dc)
+- [Setup](#org7255b41)
+- [Development](#org6c908cd)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="org82a192e"></a>
+<a id="org7aff8dc"></a>
 
 # About
 
@@ -17,7 +17,7 @@
 - ROS Distribution: humble
 - Description: ROS 2 weigh scale interface.
 - Version: 0.1.0
-- Release Date: 2023-02-13
+- Release Date: 2023-02-14
 - Creation Date: 2022-12-14
 - License: BSD-3-Clause
 - URL: https://github.com/janelia-ros/weigher_ros
@@ -30,12 +30,12 @@
 ```
 
 
-<a id="orgc831307"></a>
+<a id="org7255b41"></a>
 
 # Setup
 
 
-<a id="orga0d50b9"></a>
+<a id="org6c908cd"></a>
 
 # Development
 

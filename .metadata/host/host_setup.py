@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 # This file is generated automatically from metadata
 # File edits may be overwritten!
 
@@ -8,7 +6,7 @@ import click
 import subprocess
 from pathlib import Path
 
-class Docker(object):
+class HostSetup(object):
 
     def __init__(self,dry_run,*args,**kwargs):
         self.dry_run = dry_run
@@ -44,22 +42,22 @@ def cli(ctx,dry_run):
     if dry_run:
         click.echo('Dry Run')
 
-    docker = Docker(dry_run)
+    host_setup = HostSetup(dry_run)
 
     ctx.ensure_object(dict)
-    ctx.obj['DOCKER'] = docker
+    ctx.obj['HOST_SETUP'] = host_setup
 
 @cli.command()
 @click.pass_context
 def install(ctx):
     click.echo('Installing')
-    ctx.obj['DOCKER'].install()
+    ctx.obj['HOST_SETUP'].install()
 
 @cli.command()
 @click.pass_context
 def uninstall(ctx):
     click.echo('Uninstalling')
-    ctx.obj['DOCKER'].uninstall()
+    ctx.obj['HOST_SETUP'].uninstall()
 
 # -----------------------------------------------------------------------------------------
 if __name__ == '__main__':

@@ -555,7 +555,7 @@ host-apt-dependencies:
 host-setup: host-apt-dependencies
 	python3 .metadata/host/host_setup.py install;\
 	sudo chmod +x /usr/local/bin/find_device_then_run.py;\
-	sudo chmod +x /usr/local/bin/find_device_then_run.py;\
+	sudo chmod +x /usr/local/bin/echo-weight;\
 
 PORT = /dev/ttyUSB0
 DOCKER-CONTAINER-PORT = docker run -it --net=host --pid=host --device=$(PORT) <<docker-image-name>>
@@ -778,7 +778,7 @@ KERNEL=="ttyUSB*", TAG+="systemd", ENV{SYSTEMD_WANTS}="weigher-attached@00.servi
 #+BEGIN_SRC python :exports none :noweb yes
 # This file is generated automatically from metadata
 # File edits may be overwritten!
-#!/usr/bin/env python3
+#!/usr/bin/python3
 
 import os
 import click

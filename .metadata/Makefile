@@ -65,7 +65,7 @@ host-apt-dependencies:
 host-setup: host-apt-dependencies
 	python3 .metadata/host/host_setup.py install;\
 	sudo chmod +x /usr/local/bin/find_device_then_run.py;\
-	sudo chmod +x /usr/local/bin/find_device_then_run.py;\
+	sudo chmod +x /usr/local/bin/echo-weight;\
 
 PORT = /dev/ttyUSB0
 DOCKER-CONTAINER-PORT = docker run -it --net=host --pid=host --device=$(PORT) weigher:latest

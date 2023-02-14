@@ -1,13 +1,13 @@
-- [About](#org882ad0f)
-- [Usage](#org9fd2781)
-- [Setup](#org67aa106)
-- [Development](#org365c2c7)
+- [About](#org725bc69)
+- [Usage](#org04dcb09)
+- [Setup](#orgff6ceef)
+- [Development](#orgf503e06)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="org882ad0f"></a>
+<a id="org725bc69"></a>
 
 # About
 
@@ -35,7 +35,7 @@
 ```
 
 
-<a id="org9fd2781"></a>
+<a id="org04dcb09"></a>
 
 # Usage
 
@@ -83,6 +83,9 @@ ssh weigher@weigher.local
 
 <https://weigher.lan:9090/>
 
+-   username: weigher
+-   password: ******\*******
+
 
 ### Echo weight topic in Raspberry Pi terminal
 
@@ -91,7 +94,7 @@ echo-weight
 ```
 
 
-<a id="org67aa106"></a>
+<a id="orgff6ceef"></a>
 
 # Setup
 
@@ -221,7 +224,7 @@ echo-weight
     ```
 
 
-<a id="org365c2c7"></a>
+<a id="orgf503e06"></a>
 
 # Development
 

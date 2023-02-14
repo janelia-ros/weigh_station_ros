@@ -244,6 +244,9 @@ ssh weigher@weigher.local
 
 [[https://weigher.lan:9090/]]
 
+- username: weigher
+- password: *******
+
 *** Echo weight topic in Raspberry Pi terminal
 
 #+BEGIN_SRC sh :noweb yes
@@ -776,9 +779,10 @@ KERNEL=="ttyUSB*", TAG+="systemd", ENV{SYSTEMD_WANTS}="weigher-attached@00.servi
 
 #+HEADER: :tangle (if tangle-external-files "host/root/usr/local/bin/find_device_then_run.py" "no")
 #+BEGIN_SRC python :exports none :noweb yes
+#!/usr/bin/env python3
+
 # This file is generated automatically from metadata
 # File edits may be overwritten!
-#!/usr/bin/python3
 
 import os
 import click

@@ -1,6 +1,7 @@
+#!/usr/bin/env python3
+
 # This file is generated automatically from metadata
 # File edits may be overwritten!
-#!/usr/bin/python3
 
 import os
 import click

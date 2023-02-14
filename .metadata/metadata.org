@@ -57,7 +57,12 @@ https://github.com/janelia-pypi/loadstar_sensors_interface_python
 2022-12-14
 #+END_SRC
 
-#+NAME: weigher-node
+#+NAME: weigher-package
+#+BEGIN_SRC text :exports none :noweb yes
+weigher
+#+END_SRC
+
+#+NAME: weigher-executable
 #+BEGIN_SRC text :exports none :noweb yes
 weigher
 #+END_SRC
@@ -187,7 +192,7 @@ Python 3
 - ROS Distribution: <<ros-distribution>>
 - Description: <<description>>
 - Version: <<version>>
-- Weigher Node: <<weigher-node>>
+- Weigher Package: <<weigher-package>>
 - Weigher Launch File: <<weigher-launch-file>>
 - Weigher Topic: <<weigher-topic>>
 - Weigher Message: <<weigher-message>>
@@ -424,14 +429,35 @@ docker exec -it container-name bash
 
 ** Ubuntu
 
+*** Build
+
+***** Source the ROS underlay and activate the Python virtualenv and build ROS packages
+
+#+BEGIN_SRC sh :noweb yes
+# build may finish with stderr warnings about deprecated setup.py install
+# if using Python 3.10 or higher
+cd <<ros-workspace-path>> && \
+make -f src/<<repository-name>>/.metadata/Makefile ros-build
+#+END_SRC
+
 *** Run
 
 **** Source the ROS underlay and overlay and activate Python virtualenv and run the weigher node
 
+***** Launch file
+
 #+BEGIN_SRC sh :noweb yes
 source <<ros-workspace-path>>/src/<<repository-name>>/.metadata/setup.bash && \
 source <<ros-workspace-path>>/install/setup.bash && \
-ros2 launch <<weigher-node>> <<weigher-launch-file>>
+ros2 launch <<weigher-package>> <<weigher-launch-file>>
+#+END_SRC
+
+***** ROS Run
+
+#+BEGIN_SRC sh :noweb yes
+source <<ros-workspace-path>>/src/<<repository-name>>/.metadata/setup.bash && \
+source <<ros-workspace-path>>/install/setup.bash && \
+ros2 run <<weigher-package>> <<weigher-executable>>
 #+END_SRC
 
 **** Echo the weigher topic
@@ -599,7 +625,7 @@ docker-container-port:
 
 .PHONY: docker-publish-weight
 docker-publish-weight:
-	$(DOCKER-CONTAINER-PORT) ros2 launch <<weigher-node>> <<weigher-launch-file>>
+	$(DOCKER-CONTAINER-PORT) ros2 launch <<weigher-package>> <<weigher-launch-file>>
 
 .PHONY: docker-echo-weight
 docker-echo-weight:
@@ -845,7 +871,7 @@ class DockerController(object):
 
     def run(self):
         image = '<<docker-image-name>>'
-        command = ['ros2','launch','<<weigher-node>>','<<weigher-launch-file>>']
+        command = ['ros2','launch','<<weigher-package>>','<<weigher-launch-file>>']
         detach = True
         devs = sorted(Path('/dev').glob('ttyUSB*'))
         devices = ['{0}:{0}'.format(dev) for dev in devs]

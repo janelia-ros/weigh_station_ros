@@ -1,13 +1,13 @@
-- [About](#orgdf2a80d)
-- [Usage](#orga5cd01a)
-- [Setup](#org23302b7)
-- [Development](#org3dc4512)
+- [About](#orgbf320a6)
+- [Usage](#orga9fd126)
+- [Setup](#orge910af9)
+- [Development](#org5605326)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="orgdf2a80d"></a>
+<a id="orgbf320a6"></a>
 
 # About
 
@@ -18,7 +18,7 @@
 - ROS Distribution: humble
 - Description: This repository contains ROS 2 packages that publish weight messages from a digital scale.
 - Version: 1.0.0
-- Weigher Node: weigher
+- Weigher Package: weigher
 - Weigher Launch File: weigher_launch.py
 - Weigher Topic: /weight
 - Weigher Message: Weight.msg
@@ -35,7 +35,7 @@
 ```
 
 
-<a id="orga5cd01a"></a>
+<a id="orga9fd126"></a>
 
 # Usage
 
@@ -94,7 +94,7 @@ echo-weight
 ```
 
 
-<a id="org23302b7"></a>
+<a id="orge910af9"></a>
 
 # Setup
 
@@ -225,7 +225,7 @@ echo-weight
     ```
 
 
-<a id="org3dc4512"></a>
+<a id="org5605326"></a>
 
 # Development
 
@@ -285,15 +285,37 @@ docker exec -it container-name bash
 ## Ubuntu
 
 
+### Build
+
+1.  Source the ROS underlay and activate the Python virtualenv and build ROS packages
+
+    ```sh
+    # build may finish with stderr warnings about deprecated setup.py install
+    # if using Python 3.10 or higher
+    cd ~/ros2_ws && \
+    make -f src/weigher_ros/.metadata/Makefile ros-build
+    ```
+
+
 ### Run
 
 1.  Source the ROS underlay and overlay and activate Python virtualenv and run the weigher node
 
-    ```sh
-    source ~/ros2_ws/src/weigher_ros/.metadata/setup.bash && \
-    source ~/ros2_ws/install/setup.bash && \
-    ros2 launch weigher weigher_launch.py
-    ```
+    1.  Launch file
+    
+        ```sh
+        source ~/ros2_ws/src/weigher_ros/.metadata/setup.bash && \
+        source ~/ros2_ws/install/setup.bash && \
+        ros2 launch weigher weigher_launch.py
+        ```
+    
+    2.  ROS Run
+    
+        ```sh
+        source ~/ros2_ws/src/weigher_ros/.metadata/setup.bash && \
+        source ~/ros2_ws/install/setup.bash && \
+        ros2 run weigher weigher
+        ```
 
 2.  Echo the weigher topic
 

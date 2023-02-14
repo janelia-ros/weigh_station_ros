@@ -16,7 +16,7 @@ def generate_launch_description():
         serial_port_arg,
         Node(
             package='weigher',
-            executable='weigher_node',
+            executable='weigher',
             name='weigher',
             parameters=[{
             'serial_port': LaunchConfiguration('serial_port'),

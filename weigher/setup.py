@@ -24,7 +24,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'weigher_node = weigher.weigher_node:main'
+            'weigher = weigher.weigher_node:main'
         ],
     }
 )

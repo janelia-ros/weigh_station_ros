@@ -528,7 +528,7 @@ docker-image-debug:
 
 .PHONY: docker-container
 docker-container:
-	$(DOCKER-CONTAINER)
+	$(DOCKER-CONTAINER) bash
 
 .PHONY: metadata-edits
 metadata-edits:
@@ -566,7 +566,7 @@ DOCKER-CONTAINER-PORT = docker run -it --net=host --pid=host --device=$(PORT) <<
 
 .PHONY: docker-container-port
 docker-container-port:
-	$(DOCKER-CONTAINER-PORT)
+	$(DOCKER-CONTAINER-PORT) bash
 
 .PHONY: docker-publish-weight
 docker-publish-weight:
@@ -680,8 +680,6 @@ ENV OVERLAY_WS $OVERLAY_WS
 RUN sed --in-place --expression \
       '$isource "$OVERLAY_WS/install/setup.bash"' \
       /ros_entrypoint.sh
-
-CMD ["bash"]
 #+END_SRC
 
 #+BEGIN_SRC text :tangle COLCON_IGNORE :exports none :noweb yes

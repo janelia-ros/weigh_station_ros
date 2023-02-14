@@ -34,7 +34,7 @@ docker-image-debug:
 
 .PHONY: docker-container
 docker-container:
-	$(DOCKER-CONTAINER)
+	$(DOCKER-CONTAINER) bash
 
 .PHONY: metadata-edits
 metadata-edits:
@@ -72,7 +72,7 @@ DOCKER-CONTAINER-PORT = docker run -it --net=host --pid=host --device=$(PORT) we
 
 .PHONY: docker-container-port
 docker-container-port:
-	$(DOCKER-CONTAINER-PORT)
+	$(DOCKER-CONTAINER-PORT) bash
 
 .PHONY: docker-publish-weight
 docker-publish-weight:

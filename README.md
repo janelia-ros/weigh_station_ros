@@ -1,12 +1,12 @@
-- [About](#orgf26c4c5)
-- [Setup](#org31e93da)
-- [Development](#org5a0be01)
+- [About](#orgdfa95a0)
+- [Setup](#org8655066)
+- [Development](#orge4112e6)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="orgf26c4c5"></a>
+<a id="orgdfa95a0"></a>
 
 # About
 
@@ -30,12 +30,12 @@
 ```
 
 
-<a id="org31e93da"></a>
+<a id="org8655066"></a>
 
 # Setup
 
 
-<a id="org5a0be01"></a>
+<a id="orge4112e6"></a>
 
 # Development
 
@@ -81,6 +81,20 @@ make -f .metadata/Makefile metadata
 
 ```sh
 make -f .metadata/Makefile docker-container
+```
+
+
+### Run Docker container with serial port access
+
+```sh
+make -f .metadata/Makefile docker-container-port
+```
+
+
+### Run Docker container and launch weigher
+
+```sh
+make -f .metadata/Makefile docker-launch-weigher
 ```
 
 

@@ -1,9 +1,6 @@
 # This file is generated automatically from metadata
 # File edits may be overwritten!
 
-.PHONY: upload
-upload: metadata package twine add clean
-
 MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 MAKEFILE_DIR := $(notdir $(patsubst %/,%,$(dir $(MAKEFILE_PATH))))
 GUIX-TIME-MACHINE = guix time-machine -C $(MAKEFILE_DIR)/guix/channels.scm
@@ -26,6 +23,10 @@ requirements.txt:
 	pip freeze --local > requirements.txt &&\
 	deactivate &&\
 	rm -rf .venv
+
+.PHONY: docker-image
+docker-image:
+	$(DOCKER-IMAGE)
 
 .PHONY: docker-image-debug
 docker-image-debug:
@@ -58,9 +59,20 @@ ros-build:
 
 .PHONY: host-apt-dependencies
 host-apt-dependencies:
-	sudo apt install -y python3-filelock python3-docker;\
+	sudo apt install -y python3-filelock python3-docker python3-click;\
 
 .PHONY: host-setup
 host-setup: host-apt-dependencies
 	python3 .metadata/host/host_setup.py install;\
-	chmod +x /usr/local/bin/find_device_then_run.py
+	sudo chmod +x /usr/local/bin/find_device_then_run.py
+
+PORT = /dev/ttyUSB0
+DOCKER-CONTAINER-PORT = $(DOCKER-IMAGE); docker run -it --device=$(PORT) weigher
+
+.PHONY: docker-container-port
+docker-container-port:
+	$(DOCKER-CONTAINER-PORT)
+
+.PHONY: docker-launch-weigher
+docker-run-weigher:
+	$(DOCKER-CONTAINER-PORT) ros2 launch weigher weigher_launch.py

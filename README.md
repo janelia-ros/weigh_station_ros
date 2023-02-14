@@ -1,13 +1,13 @@
-- [About](#org8ebc63b)
-- [Usage](#orgfc6422c)
-- [Setup](#org1e72201)
-- [Development](#orgd323089)
+- [About](#orge44435a)
+- [Usage](#org6a39730)
+- [Setup](#orgb11d301)
+- [Development](#org3eebb46)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="org8ebc63b"></a>
+<a id="orge44435a"></a>
 
 # About
 
@@ -35,7 +35,7 @@
 ```
 
 
-<a id="orgfc6422c"></a>
+<a id="org6a39730"></a>
 
 # Usage
 
@@ -84,7 +84,14 @@ ssh weigher@weigher.local
 <https://weigher.lan:9090/>
 
 
-<a id="org1e72201"></a>
+### Echo weight topic in Raspberry Pi terminal
+
+```sh
+echo-weight
+```
+
+
+<a id="orgb11d301"></a>
 
 # Setup
 
@@ -191,7 +198,14 @@ ssh weigher@weigher.local
     sudo apt install make
     ```
 
-7.  Host Setup
+7.  Docker image
+
+    ```sh
+    cd ~/weigher_ros && \
+    make -f .metadata/Makefile docker-image
+    ```
+
+8.  Host Setup
 
     ```sh
     cd ~/weigher_ros && \
@@ -199,7 +213,7 @@ ssh weigher@weigher.local
     sudo reboot
     ```
 
-8.  Check systemd service
+9.  Check systemd service
 
     ```sh
     systemctl status weigher-attached@00.service
@@ -207,7 +221,7 @@ ssh weigher@weigher.local
     ```
 
 
-<a id="orgd323089"></a>
+<a id="org3eebb46"></a>
 
 # Development
 

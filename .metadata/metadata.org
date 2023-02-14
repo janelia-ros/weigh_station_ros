@@ -244,6 +244,12 @@ ssh weigher@weigher.local
 
 [[https://weigher.lan:9090/]]
 
+*** Echo weight topic in Raspberry Pi terminal
+
+#+BEGIN_SRC sh :noweb yes
+echo-weight
+#+END_SRC
+
 * Setup
 
 ** Subscriber
@@ -342,6 +348,13 @@ cat .ssh/id_ed25519.pub
 
 #+BEGIN_SRC sh :noweb yes
 sudo apt install make
+#+END_SRC
+
+**** Docker image
+
+#+BEGIN_SRC sh :noweb yes
+cd ~/<<repository-name>> && \
+make -f .metadata/Makefile docker-image
 #+END_SRC
 
 **** Host Setup
@@ -541,7 +554,8 @@ host-apt-dependencies:
 .PHONY: host-setup
 host-setup: host-apt-dependencies
 	python3 .metadata/host/host_setup.py install;\
-	sudo chmod +x /usr/local/bin/find_device_then_run.py
+	sudo chmod +x /usr/local/bin/find_device_then_run.py;\
+	sudo chmod +x /usr/local/bin/find_device_then_run.py;\
 
 PORT = /dev/ttyUSB0
 DOCKER-CONTAINER-PORT = docker run -it --net=host --pid=host --device=$(PORT) <<docker-image-name>>
@@ -831,6 +845,12 @@ def cli(dry_run):
 # -----------------------------------------------------------------------------------------
 if __name__ == '__main__':
     cli()
+#+END_SRC
+
+#+HEADER: :tangle (if tangle-external-files "host/root/usr/local/bin/echo-weight" "no")
+#+BEGIN_SRC sh :exports none :noweb yes
+#!/bin/bash
+make -f /home/weigher/<<repository-name>>/.metadata/Makefile docker-echo-weight
 #+END_SRC
 
 #+HEADER: :tangle (if tangle-external-files "../AUTHORS" "no")

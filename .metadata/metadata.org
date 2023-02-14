@@ -446,7 +446,8 @@ host-apt-dependencies:
 
 .PHONY: host-setup
 host-setup: host-apt-dependencies
-	python3 .metadata/host/host_setup.py install
+	python3 .metadata/host/host_setup.py install;\
+	chmod +x /usr/local/bin/find_device_then_run.py
 #+END_SRC
 
 #+BEGIN_SRC scheme :tangle emacs/init.el :exports none :noweb yes
@@ -636,7 +637,7 @@ User=weigher
 Group=weigher
 WorkingDirectory=~
 Environment=PYTHONUNBUFFERED=1
-ExecStart=/usr/local/bin/find_weigher_then_run.py
+ExecStart=/usr/local/bin/find_device_then_run.py
 #+END_SRC
 
 #+HEADER: :tangle (if tangle-external-files "host/root/etc/udev/rules.d/50-ft232.rules" "no")
@@ -650,7 +651,7 @@ ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", MODE="0666", ENV{ID_MM_DEVICE
 KERNEL=="ttyUSB*", TAG+="systemd", ENV{SYSTEMD_WANTS}="weigher-attached@00.service"
 #+END_SRC
 
-#+HEADER: :tangle (if tangle-external-files "host/root/usr/local/bin/find_weigher_then_run.py" "no")
+#+HEADER: :tangle (if tangle-external-files "host/root/usr/local/bin/find_device_then_run.py" "no")
 #+BEGIN_SRC python :exports none :noweb yes
 # This file is generated automatically from metadata
 # File edits may be overwritten!
@@ -716,7 +717,7 @@ def cli(dry_run):
             docker_controller.stop_all()
             docker_controller.run()
     except filelock.Timeout:
-        print('Another instance of find_weigher_then_run currently holds the lock')
+        print('Another instance of find_device_then_run currently holds the lock')
 
 # -----------------------------------------------------------------------------------------
 if __name__ == '__main__':

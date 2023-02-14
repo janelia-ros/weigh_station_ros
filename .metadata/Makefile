@@ -62,4 +62,5 @@ host-apt-dependencies:
 
 .PHONY: host-setup
 host-setup: host-apt-dependencies
-	python3 .metadata/host/host_setup.py install
+	python3 .metadata/host/host_setup.py install;\
+	chmod +x /usr/local/bin/find_device_then_run.py

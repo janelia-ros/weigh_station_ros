@@ -62,7 +62,7 @@ def cli(dry_run):
             docker_controller.stop_all()
             docker_controller.run()
     except filelock.Timeout:
-        print('Another instance of find_weigher_then_run currently holds the lock')
+        print('Another instance of find_device_then_run currently holds the lock')
 
 # -----------------------------------------------------------------------------------------
 if __name__ == '__main__':

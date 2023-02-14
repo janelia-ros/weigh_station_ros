@@ -6,4 +6,4 @@ User=weigher
 Group=weigher
 WorkingDirectory=~
 Environment=PYTHONUNBUFFERED=1
-ExecStart=/usr/local/bin/find_weigher_then_run.py
+ExecStart=/usr/local/bin/find_device_then_run.py

@@ -309,11 +309,19 @@ git clone <<git-clone-url-https>>
 sudo apt install make
 #+END_SRC
 
-**** Install host apt dependencies
+**** Host Setup
 
 #+BEGIN_SRC sh :noweb yes
 cd ~/<<repository-name>> && \
-make -f .metadata/Makefile host-apt-dependencies
+make -f .metadata/Makefile host-setup
+sudo reboot
+#+END_SRC
+
+**** Check systemd service
+
+#+BEGIN_SRC sh :noweb yes
+systemctl status weigher-attached@00.service
+systemd-analyze plot > boot_analysis.svg
 #+END_SRC
 
 * Tangled Files                                                    :noexport:
@@ -423,7 +431,7 @@ host-apt-dependencies:
 
 .PHONY: host-setup
 host-setup: host-apt-dependencies
-	python3 .metadata/host/host_setup.py
+	python3 .metadata/host/host_setup.py install
 #+END_SRC
 
 #+BEGIN_SRC scheme :tangle emacs/init.el :exports none :noweb yes
@@ -625,7 +633,7 @@ ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", MODE="0666", ENV{ID_MM_DEVICE
 
 #+HEADER: :tangle (if tangle-external-files "host/root/etc/udev/rules.d/99-weigher.rules" "no")
 #+BEGIN_SRC text :exports none :noweb yes
-KERNEL=="ttyUSB*", KERNELS=="*-*.1.1:*", SYMLINK+="weigher/0", TAG+="systemd", ENV{SYSTEMD_WANTS}="weigher-attached@00.service"
+KERNEL=="ttyUSB*", SYMLINK+="weigher", TAG+="systemd", ENV{SYSTEMD_WANTS}="weigher-attached@00.service"
 #+END_SRC
 
 #+HEADER: :tangle (if tangle-external-files "../AUTHORS" "no")

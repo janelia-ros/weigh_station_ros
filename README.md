@@ -1,12 +1,12 @@
-- [About](#org7aff8dc)
-- [Setup](#org7255b41)
-- [Development](#org6c908cd)
+- [About](#orgb87a986)
+- [Setup](#org17f666f)
+- [Development](#orgbbb26f8)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="org7aff8dc"></a>
+<a id="orgb87a986"></a>
 
 # About
 
@@ -30,12 +30,12 @@
 ```
 
 
-<a id="org7255b41"></a>
+<a id="org17f666f"></a>
 
 # Setup
 
 
-<a id="org6c908cd"></a>
+<a id="orgbbb26f8"></a>
 
 # Development
 
@@ -179,9 +179,17 @@ make -f .metadata/Makefile docker-container
     sudo apt install make
     ```
 
-6.  Install host apt dependencies
+6.  Host Setup
 
     ```sh
     cd ~/weigher_ros && \
-    make -f .metadata/Makefile host-apt-dependencies
+    make -f .metadata/Makefile host-setup
+    sudo reboot
+    ```
+
+7.  Check systemd service
+
+    ```sh
+    systemctl status weigher-attached@00.service
+    systemd-analyze plot > boot_analysis.svg
     ```

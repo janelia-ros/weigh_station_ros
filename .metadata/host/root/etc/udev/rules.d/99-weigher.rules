@@ -1,1 +1,1 @@
-KERNEL=="ttyUSB*", KERNELS=="*-*.1.1:*", SYMLINK+="weigher/0", TAG+="systemd", ENV{SYSTEMD_WANTS}="weigher-attached@00.service"
+KERNEL=="ttyUSB*", SYMLINK+="weigher", TAG+="systemd", ENV{SYSTEMD_WANTS}="weigher-attached@00.service"

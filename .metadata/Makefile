@@ -62,4 +62,4 @@ host-apt-dependencies:
 
 .PHONY: host-setup
 host-setup: host-apt-dependencies
-	python3 .metadata/host/host_setup.py
+	python3 .metadata/host/host_setup.py install

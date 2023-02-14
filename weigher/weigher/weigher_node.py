@@ -36,7 +36,7 @@ class Weigher(Node):
         await self._dev.stop_getting_sensor_values()
 
     async def sensor_value_callback(self, sensor_value):
-        if sensor_value.magnitude <= self._threshold:
+        if sensor_value.magnitude >= self._threshold:
             msg = Weight()
             msg.header.stamp = self.get_clock().now().to_msg()
             msg.weight = sensor_value.magnitude

@@ -1,5 +1,6 @@
 [Unit]
 Description=Weigher attached
+After=docker.service
 
 [Service]
 User=weigher

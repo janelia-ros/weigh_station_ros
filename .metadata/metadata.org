@@ -368,9 +368,10 @@ make -f .metadata/Makefile host-setup
 sudo reboot
 #+END_SRC
 
-**** Check systemd service
+**** Check docker and systemd service
 
 #+BEGIN_SRC sh :noweb yes
+systemctl status docker
 systemctl status weigher-attached@00.service
 systemd-analyze plot > boot_analysis.svg
 #+END_SRC
@@ -757,6 +758,7 @@ if __name__ == '__main__':
 #+BEGIN_SRC text :exports none :noweb yes
 [Unit]
 Description=Weigher attached
+After=docker.service
 
 [Service]
 User=weigher

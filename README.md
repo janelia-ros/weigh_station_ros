@@ -1,13 +1,13 @@
-- [About](#org725bc69)
-- [Usage](#org04dcb09)
-- [Setup](#orgff6ceef)
-- [Development](#orgf503e06)
+- [About](#orgb0733d9)
+- [Usage](#org71d71f3)
+- [Setup](#orgb709706)
+- [Development](#orgd93e30c)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="org725bc69"></a>
+<a id="orgb0733d9"></a>
 
 # About
 
@@ -35,7 +35,7 @@
 ```
 
 
-<a id="org04dcb09"></a>
+<a id="org71d71f3"></a>
 
 # Usage
 
@@ -94,7 +94,7 @@ echo-weight
 ```
 
 
-<a id="orgff6ceef"></a>
+<a id="orgb709706"></a>
 
 # Setup
 
@@ -216,15 +216,16 @@ echo-weight
     sudo reboot
     ```
 
-9.  Check systemd service
+9.  Check docker and systemd service
 
     ```sh
+    systemctl status docker
     systemctl status weigher-attached@00.service
     systemd-analyze plot > boot_analysis.svg
     ```
 
 
-<a id="orgf503e06"></a>
+<a id="orgd93e30c"></a>
 
 # Development
 

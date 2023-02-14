@@ -33,8 +33,8 @@ class DockerController(object):
                 print('docker stop {0}'.format(container.name))
 
     def run(self):
-        image = 'weigher'
-        command = ['ros2','launch','','']
+        image = 'weigher:latest'
+        command = ['ros2','launch','weigher','weigher_launch.py']
         detach = True
         devs = sorted(Path('/dev').glob('ttyUSB*'))
         devices = ['{0}:{0}'.format(dev) for dev in devs]

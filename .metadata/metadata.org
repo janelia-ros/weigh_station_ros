@@ -69,7 +69,7 @@ weigher_launch.py
 
 #+NAME: docker-image-name
 #+BEGIN_SRC text :exports none :noweb yes
-weigher
+weigher:latest
 #+END_SRC
 
 * General and Derived Variables                                    :noexport:
@@ -406,7 +406,7 @@ GUIX-CONTAINER = $(GUIX-SHELL) $(CONTAINER)
 VENV-SHELL = rm -rf <<virtualenv-path>>; mkdir <<virtualenv-path>>; python3 -m venv <<virtualenv-path>>; source <<virtualenv-path>>/bin/activate
 DOCKER-IMAGE = docker build -f $(MAKEFILE_DIR)/docker/Dockerfile -t <<docker-image-name>> .
 DOCKER-IMAGE-DEBUG = docker build -f $(MAKEFILE_DIR)/docker/Dockerfile --no-cache --progress=plain -t <<docker-image-name>> .
-DOCKER-CONTAINER = $(DOCKER-IMAGE); docker run -it <<docker-image-name>>
+DOCKER-CONTAINER = docker run -it --net=host --pid=host <<docker-image-name>>
 
 .PHONY: guix-container
 guix-container:
@@ -463,7 +463,7 @@ host-setup: host-apt-dependencies
 	sudo chmod +x /usr/local/bin/find_device_then_run.py
 
 PORT = /dev/ttyUSB0
-DOCKER-CONTAINER-PORT = $(DOCKER-IMAGE); docker run -it --device=$(PORT) <<docker-image-name>>
+DOCKER-CONTAINER-PORT = docker run -it --net=host --pid=host --device=$(PORT) <<docker-image-name>>
 
 .PHONY: docker-container-port
 docker-container-port:
@@ -714,7 +714,7 @@ class DockerController(object):
 
     def run(self):
         image = '<<docker-image-name>>'
-        command = ['ros2','launch','<<docker-launch-node>>','<<docker-launch-file>>']
+        command = ['ros2','launch','<<ros-launch-node>>','<<ros-launch-file>>']
         detach = True
         devs = sorted(Path('/dev').glob('ttyUSB*'))
         devices = ['{0}:{0}'.format(dev) for dev in devs]

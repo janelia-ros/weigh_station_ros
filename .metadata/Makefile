@@ -8,9 +8,9 @@ GUIX-SHELL = $(GUIX-TIME-MACHINE) -- shell -m $(MAKEFILE_DIR)/guix/manifest.scm
 CONTAINER = --container --preserve='^DISPLAY$$' --preserve='^TERM$$'
 GUIX-CONTAINER = $(GUIX-SHELL) $(CONTAINER)
 VENV-SHELL = rm -rf .venv; mkdir .venv; python3 -m venv .venv; source .venv/bin/activate
-DOCKER-IMAGE = docker build -f $(MAKEFILE_DIR)/docker/Dockerfile -t weigher .
-DOCKER-IMAGE-DEBUG = docker build -f $(MAKEFILE_DIR)/docker/Dockerfile --no-cache --progress=plain -t weigher .
-DOCKER-CONTAINER = $(DOCKER-IMAGE); docker run -it weigher
+DOCKER-IMAGE = docker build -f $(MAKEFILE_DIR)/docker/Dockerfile -t weigher:latest .
+DOCKER-IMAGE-DEBUG = docker build -f $(MAKEFILE_DIR)/docker/Dockerfile --no-cache --progress=plain -t weigher:latest .
+DOCKER-CONTAINER = docker run -it --net=host --pid=host weigher:latest
 
 .PHONY: guix-container
 guix-container:
@@ -67,7 +67,7 @@ host-setup: host-apt-dependencies
 	sudo chmod +x /usr/local/bin/find_device_then_run.py
 
 PORT = /dev/ttyUSB0
-DOCKER-CONTAINER-PORT = $(DOCKER-IMAGE); docker run -it --device=$(PORT) weigher
+DOCKER-CONTAINER-PORT = docker run -it --net=host --pid=host --device=$(PORT) weigher:latest
 
 .PHONY: docker-container-port
 docker-container-port:

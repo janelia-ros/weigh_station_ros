@@ -109,11 +109,6 @@ https://<<forge>>/<<repository-organization>>/<<repository-name>>
 git@<<forge>>:<<repository-organization>>/<<repository-name>>.git
 #+END_SRC
 
-#+NAME: git-clone-url-https
-#+BEGIN_SRC text :exports none :noweb yes
-<<repository-url>>.git
-#+END_SRC
-
 #+NAME: author-given-name
 #+BEGIN_SRC text :exports none :noweb yes
 Peter
@@ -300,7 +295,13 @@ ssh weigher@weigher.local
 
 #+BEGIN_SRC sh :noweb yes
 cd ~ && \
-git clone <<git-clone-url-https>>
+git clone <<git-clone-url-ssh>>
+#+END_SRC
+
+**** Add deploy ssh key to Github Repository
+
+#+BEGIN_SRC sh :noweb yes
+cat .ssh/id_ed25519.pub
 #+END_SRC
 
 **** Install make for metadata commands

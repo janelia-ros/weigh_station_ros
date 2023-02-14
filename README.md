@@ -1,12 +1,12 @@
-- [About](#orgb87a986)
-- [Setup](#org17f666f)
-- [Development](#orgbbb26f8)
+- [About](#org5f3042e)
+- [Setup](#org6a95676)
+- [Development](#org7728e81)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="orgb87a986"></a>
+<a id="org5f3042e"></a>
 
 # About
 
@@ -30,12 +30,12 @@
 ```
 
 
-<a id="org17f666f"></a>
+<a id="org6a95676"></a>
 
 # Setup
 
 
-<a id="orgbbb26f8"></a>
+<a id="org7728e81"></a>
 
 # Development
 
@@ -170,16 +170,22 @@ make -f .metadata/Makefile docker-container
 
     ```sh
     cd ~ && \
-    git clone https://github.com/janelia-ros/weigher_ros.git
+    git clone git@github.com:janelia-ros/weigher_ros.git
     ```
 
-5.  Install make for metadata commands
+5.  Add deploy ssh key to Github Repository
+
+    ```sh
+    cat .ssh/id_ed25519.pub
+    ```
+
+6.  Install make for metadata commands
 
     ```sh
     sudo apt install make
     ```
 
-6.  Host Setup
+7.  Host Setup
 
     ```sh
     cd ~/weigher_ros && \
@@ -187,7 +193,7 @@ make -f .metadata/Makefile docker-container
     sudo reboot
     ```
 
-7.  Check systemd service
+8.  Check systemd service
 
     ```sh
     systemctl status weigher-attached@00.service

@@ -1,13 +1,13 @@
-- [About](#org997f919)
-- [Usage](#org7e8d2cb)
-- [Setup](#org2a1d153)
-- [Development](#org6d7361e)
+- [About](#orgdf2a80d)
+- [Usage](#orga5cd01a)
+- [Setup](#org23302b7)
+- [Development](#org3dc4512)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="org997f919"></a>
+<a id="orgdf2a80d"></a>
 
 # About
 
@@ -35,7 +35,7 @@
 ```
 
 
-<a id="org7e8d2cb"></a>
+<a id="orga5cd01a"></a>
 
 # Usage
 
@@ -94,7 +94,7 @@ echo-weight
 ```
 
 
-<a id="org2a1d153"></a>
+<a id="org23302b7"></a>
 
 # Setup
 
@@ -225,7 +225,7 @@ echo-weight
     ```
 
 
-<a id="org6d7361e"></a>
+<a id="org3dc4512"></a>
 
 # Development
 
@@ -261,6 +261,27 @@ make -f .metadata/Makefile docker-echo-weight
 ```
 
 
+### Stop all Docker containers
+
+```sh
+docker stop $(docker ps -aq)
+```
+
+
+### Find running container Name
+
+```sh
+docker ps
+```
+
+
+### Run bash commands in running container
+
+```sh
+docker exec -it container-name bash
+```
+
+
 ## Ubuntu
 
 
@@ -281,6 +302,20 @@ make -f .metadata/Makefile docker-echo-weight
     source ~/ros2_ws/install/setup.bash && \
     ros2 topic echo /weight
     ```
+
+
+## Raspberry Pi
+
+
+### Update
+
+```sh
+cd ~/weigher_ros
+git pull
+make -f .metadata/Makefile docker-image
+make -f .metadata/Makefile host-setup
+sudo reboot
+```
 
 
 ## Metadata

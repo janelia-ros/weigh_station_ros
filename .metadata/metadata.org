@@ -404,6 +404,24 @@ make -f .metadata/Makefile docker-publish-weight
 make -f .metadata/Makefile docker-echo-weight
 #+END_SRC
 
+*** Stop all Docker containers
+
+#+BEGIN_SRC sh :noweb yes
+docker stop $(docker ps -aq)
+#+END_SRC
+
+*** Find running container Name
+
+#+BEGIN_SRC sh :noweb yes
+docker ps
+#+END_SRC
+
+*** Run bash commands in running container
+
+#+BEGIN_SRC sh :noweb yes
+docker exec -it container-name bash
+#+END_SRC
+
 ** Ubuntu
 
 *** Run
@@ -422,6 +440,18 @@ ros2 launch <<weigher-node>> <<weigher-launch-file>>
 # Open a new termial
 source <<ros-workspace-path>>/install/setup.bash && \
 ros2 topic echo <<weigher-topic>>
+#+END_SRC
+
+** Raspberry Pi
+
+*** Update
+
+#+BEGIN_SRC sh :noweb yes
+cd ~/weigher_ros
+git pull
+make -f .metadata/Makefile docker-image
+make -f .metadata/Makefile host-setup
+sudo reboot
 #+END_SRC
 
 ** Metadata
@@ -447,7 +477,6 @@ make -f .metadata/Makefile metadata-edits
 #+BEGIN_SRC sh :noweb yes
 make -f .metadata/Makefile metadata
 #+END_SRC
-
 
 * Tangled Files                                                    :noexport:
 

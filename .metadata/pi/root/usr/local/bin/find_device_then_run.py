@@ -34,7 +34,7 @@ class DockerController(object):
                 print('docker stop {0}'.format(container.name))
 
     def run(self):
-        image = 'weigher:latest'
+        image = 'weigher:humble'
         command = ['ros2','launch','weigher','weigher_launch.py']
         detach = True
         devs = sorted(Path('/dev').glob('ttyUSB*'))

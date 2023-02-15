@@ -132,7 +132,7 @@ bool success
 
 #+NAME: docker-image-name
 #+BEGIN_SRC text :exports none :noweb yes
-weigher:latest
+weigher:<<ros-distribution>>
 #+END_SRC
 
 * General and Derived Variables                                    :noexport:

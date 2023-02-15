@@ -57,13 +57,13 @@ ros-build:
 	source src/weigher_ros/.metadata/setup.bash;\
 	colcon build --symlink-install
 
-.PHONY: host-apt-dependencies
-host-apt-dependencies:
+.PHONY: pi-apt-dependencies
+pi-apt-dependencies:
 	sudo apt install -y python3-filelock python3-docker python3-click;\
 
-.PHONY: host-setup
-host-setup: host-apt-dependencies
-	python3 .metadata/host/host_setup.py install;\
+.PHONY: pi-setup
+pi-setup: pi-apt-dependencies
+	python3 .metadata/pi/pi_setup.py install;\
 	sudo chmod +x /usr/local/bin/find_device_then_run.py;\
 	sudo chmod +x /usr/local/bin/echo-weight;\
 

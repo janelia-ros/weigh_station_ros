@@ -1,15 +1,15 @@
-- [About](#org4a2d997)
-- [Usage](#orgbe6356c)
-- [Messages](#org5bd9490)
-- [Topics](#org9e13693)
-- [Setup](#org740236a)
-- [Development](#org132a132)
+- [About](#orgfbabe94)
+- [Usage](#org2c7fe4d)
+- [Messages](#org330063d)
+- [Topics](#orgc6aaaac)
+- [Setup](#orgd046ae5)
+- [Development](#org3e6c868)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="org4a2d997"></a>
+<a id="orgfbabe94"></a>
 
 # About
 
@@ -43,7 +43,7 @@
 ```
 
 
-<a id="orgbe6356c"></a>
+<a id="org2c7fe4d"></a>
 
 # Usage
 
@@ -61,26 +61,27 @@ Scale will be tared on power up and automatically begin publishing weight messag
 On a computer connected to the same network as the Raspberry Pi, either use Docker or install ROS 2 to subscribe to weight messages.
 
 
-### Echo weight topics on network computer
+### Docker
 
-1.  Docker
+```sh
+docker run -it --net=host --pid=host weigher:latest ros2 topic list
+docker run -it --net=host --pid=host weigher:latest ros2 topic echo /weight
+docker run -it --net=host --pid=host weigher:latest ros2 topic echo /weight_thresholded
+docker run -it --net=host --pid=host weigher:latest ros2 topic echo /weight_array
+docker run -it --net=host --pid=host weigher:latest ros2 topic echo /weight_array_thresholded
+```
 
-    ```sh
-    docker run -it --net=host --pid=host weigher:latest ros2 topic echo /weight
-    docker run -it --net=host --pid=host weigher:latest ros2 topic echo /weight_thresholded
-    docker run -it --net=host --pid=host weigher:latest ros2 topic echo /weight_array
-    docker run -it --net=host --pid=host weigher:latest ros2 topic echo /weight_array_thresholded
-    ```
 
-2.  ROS 2 on Ubuntu
+### ROS 2 on Ubuntu
 
-    ```sh
-    source ~/ros2_ws/install/setup.bash
-    ros2 topic echo /weight
-    ros2 topic echo /weight_thresholded
-    ros2 topic echo /weight_array
-    ros2 topic echo /weight_array_thresholded
-    ```
+```sh
+source ~/ros2_ws/install/setup.bash
+ros2 topic list
+ros2 topic echo /weight
+ros2 topic echo /weight_thresholded
+ros2 topic echo /weight_array
+ros2 topic echo /weight_array_thresholded
+```
 
 
 ## Connect to Raspberry Pi for development and monitoring
@@ -108,7 +109,7 @@ echo-weight
 ```
 
 
-<a id="org5bd9490"></a>
+<a id="org330063d"></a>
 
 # Messages
 
@@ -136,7 +137,7 @@ Weight[] array
 ```
 
 
-<a id="org9e13693"></a>
+<a id="orgc6aaaac"></a>
 
 # Topics
 
@@ -295,7 +296,7 @@ average rate: 0.251
 ```
 
 
-<a id="org740236a"></a>
+<a id="orgd046ae5"></a>
 
 # Setup
 
@@ -409,11 +410,11 @@ average rate: 0.251
     make -f .metadata/Makefile docker-image
     ```
 
-8.  Host Setup
+8.  Pi Setup
 
     ```sh
     cd ~/weigher_ros && \
-    make -f .metadata/Makefile host-setup
+    make -f .metadata/Makefile pi-setup
     sudo reboot
     ```
 
@@ -426,7 +427,7 @@ average rate: 0.251
     ```
 
 
-<a id="org132a132"></a>
+<a id="org3e6c868"></a>
 
 # Development
 
@@ -539,7 +540,7 @@ docker exec -it container-name bash
 cd ~/weigher_ros
 git pull
 make -f .metadata/Makefile docker-image
-make -f .metadata/Makefile host-setup
+make -f .metadata/Makefile pi-setup
 sudo reboot
 ```
 

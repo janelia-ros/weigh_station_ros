@@ -6,11 +6,11 @@ import click
 import subprocess
 from pathlib import Path
 
-class HostSetup(object):
+class PiSetup(object):
 
     def __init__(self,dry_run,*args,**kwargs):
         self.dry_run = dry_run
-        self.root_name = '.metadata/host/root'
+        self.root_name = '.metadata/pi/root'
         self.path = Path(self.root_name)
 
     def _output(self,args):
@@ -42,22 +42,22 @@ def cli(ctx,dry_run):
     if dry_run:
         click.echo('Dry Run')
 
-    host_setup = HostSetup(dry_run)
+    pi_setup = PiSetup(dry_run)
 
     ctx.ensure_object(dict)
-    ctx.obj['HOST_SETUP'] = host_setup
+    ctx.obj['PI_SETUP'] = pi_setup
 
 @cli.command()
 @click.pass_context
 def install(ctx):
     click.echo('Installing')
-    ctx.obj['HOST_SETUP'].install()
+    ctx.obj['PI_SETUP'].install()
 
 @cli.command()
 @click.pass_context
 def uninstall(ctx):
     click.echo('Uninstalling')
-    ctx.obj['HOST_SETUP'].uninstall()
+    ctx.obj['PI_SETUP'].uninstall()
 
 # -----------------------------------------------------------------------------------------
 if __name__ == '__main__':

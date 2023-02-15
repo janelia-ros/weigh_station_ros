@@ -1,13 +1,14 @@
-- [About](#orga8d5989)
-- [Usage](#orgd191cb4)
-- [Setup](#org3c3c448)
-- [Development](#org124662f)
+- [About](#org95f4cc4)
+- [Usage](#orgd9d6b1c)
+- [Topics](#orgcb6ba48)
+- [Setup](#org1fcf85c)
+- [Development](#org4dcbb7e)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="orga8d5989"></a>
+<a id="org95f4cc4"></a>
 
 # About
 
@@ -38,7 +39,7 @@
 ```
 
 
-<a id="orgd191cb4"></a>
+<a id="orgd9d6b1c"></a>
 
 # Usage
 
@@ -99,7 +100,110 @@ echo-weight
 ```
 
 
-<a id="org3c3c448"></a>
+<a id="orgcb6ba48"></a>
+
+# Topics
+
+
+## weight
+
+    ---
+    stamp:
+      sec: 1676470173
+      nanosec: 765260627
+    weight: 0.13607771100000002
+    ---
+    stamp:
+      sec: 1676470173
+      nanosec: 883177140
+    weight: 0.0
+    ---
+    stamp:
+      sec: 1676470174
+      nanosec: 11527425
+    weight: 0.04535923700000001
+    ---
+    stamp:
+      sec: 1676470174
+      nanosec: 176475007
+    weight: 0.18143694800000004
+    ---
+
+```text
+---
+stamp:
+  sec: 1676470173
+  nanosec: 765260627
+weight: 0.13607771100000002
+---
+stamp:
+  sec: 1676470173
+  nanosec: 883177140
+weight: 0.0
+---
+stamp:
+  sec: 1676470174
+  nanosec: 11527425
+weight: 0.04535923700000001
+---
+stamp:
+  sec: 1676470174
+  nanosec: 176475007
+weight: 0.18143694800000004
+---
+```
+
+
+## weight\_thresholded
+
+    ---
+    stamp:
+      sec: 1676470255
+      nanosec: 932870887
+    weight: 520.8601184710001
+    ---
+    stamp:
+      sec: 1676470256
+      nanosec: 19947998
+    weight: 504.39471544000014
+    ---
+    stamp:
+      sec: 1676470256
+      nanosec: 161346684
+    weight: 499.8134325030001
+    ---
+    stamp:
+      sec: 1676470256
+      nanosec: 301352968
+    weight: 498.5887331040001
+    ---
+
+```text
+---
+stamp:
+  sec: 1676470255
+  nanosec: 932870887
+weight: 520.8601184710001
+---
+stamp:
+  sec: 1676470256
+  nanosec: 19947998
+weight: 504.39471544000014
+---
+stamp:
+  sec: 1676470256
+  nanosec: 161346684
+weight: 499.8134325030001
+---
+stamp:
+  sec: 1676470256
+  nanosec: 301352968
+weight: 498.5887331040001
+---
+```
+
+
+<a id="org1fcf85c"></a>
 
 # Setup
 
@@ -230,7 +334,7 @@ echo-weight
     ```
 
 
-<a id="org124662f"></a>
+<a id="org4dcbb7e"></a>
 
 # Development
 

@@ -72,15 +72,37 @@ weigher
 weigher_launch.py
 #+END_SRC
 
+#+NAME: weigher-messages
+#+BEGIN_SRC text :exports none :noweb yes
+Weight.msg
+WeightArray.msg
+#+END_SRC
+
+#+NAME: weight-message
+#+BEGIN_SRC text :exports none :noweb yes
+# This file is generated automatically from metadata
+# File edits may be overwritten!
+
+# Single weight reading.
+builtin_interfaces/Time stamp
+float64 weight # Measurement of the Weight in grams.
+#+END_SRC
+
+#+NAME: weight-array-message
+#+BEGIN_SRC text :exports none :noweb yes
+# This file is generated automatically from metadata
+# File edits may be overwritten!
+
+# Multiple weight readings.
+Weight[] array
+#+END_SRC
+
 #+NAME: weigher-topics
 #+BEGIN_SRC text :exports none :noweb yes
 /weight
 /weight_thresholded
-#+END_SRC
-
-#+NAME: weigher-messages
-#+BEGIN_SRC text :exports none :noweb yes
-Weight.msg
+/weight_array
+/weight_array_thresholded
 #+END_SRC
 
 #+NAME: docker-image-name
@@ -195,10 +217,10 @@ Python 3
 - Version: <<version>>
 - Weigher Package: <<weigher-package>>
 - Weigher Launch File: <<weigher-launch-file>>
-- Weigher Topics:
-  - <<weigher-topics>>
 - Weigher Messages:
   - <<weigher-messages>>
+- Weigher Topics:
+  - <<weigher-topics>>
 - Release Date: <<release-date>>
 - Creation Date: <<creation-date>>
 - License: <<license>>
@@ -232,6 +254,8 @@ Docker or install ROS 2 to subscribe to weight messages.
 #+BEGIN_SRC sh :noweb yes
 docker run -it --net=host --pid=host <<docker-image-name>> ros2 topic echo /weight
 docker run -it --net=host --pid=host <<docker-image-name>> ros2 topic echo /weight_thresholded
+docker run -it --net=host --pid=host <<docker-image-name>> ros2 topic echo /weight_array
+docker run -it --net=host --pid=host <<docker-image-name>> ros2 topic echo /weight_array_thresholded
 #+END_SRC
 
 **** ROS 2 on Ubuntu
@@ -254,7 +278,7 @@ ssh weigher@weigher.local
 [[https://weigher.lan:9090/]]
 
 - username: weigher
-- password: *******
+- password:
 
 *** Echo weight topic in Raspberry Pi terminal
 
@@ -262,33 +286,26 @@ ssh weigher@weigher.local
 echo-weight
 #+END_SRC
 
+* Messages
+
+** Weight.msg
+
+#+BEGIN_SRC text :noweb yes
+<<weight-message>>
+#+END_SRC
+
+** WeightArray.msg
+
+#+BEGIN_SRC text :noweb yes
+<<weight-array-message>>
+#+END_SRC
+
 * Topics
 
 ** weight
 
-#+BEGIN_EXAMPLE
----
-stamp:
-  sec: 1676470173
-  nanosec: 765260627
-weight: 0.13607771100000002
----
-stamp:
-  sec: 1676470173
-  nanosec: 883177140
-weight: 0.0
----
-stamp:
-  sec: 1676470174
-  nanosec: 11527425
-weight: 0.04535923700000001
----
-stamp:
-  sec: 1676470174
-  nanosec: 176475007
-weight: 0.18143694800000004
----
-#+END_EXAMPLE
+Send all messages from the digital scale one at a time along with a timestamp
+for that measurement.
 
 #+BEGIN_SRC text :noweb yes
 ---
@@ -314,31 +331,19 @@ weight: 0.18143694800000004
 ---
 #+END_SRC
 
+#+BEGIN_SRC text :noweb yes
+$ ros2 topic hz /weight
+average rate: 574.719
+	min: 0.000s max: 0.038s std dev: 0.00568s window: 2338
+average rate: 576.536
+	min: 0.000s max: 0.038s std dev: 0.00566s window: 2922
+#+END_SRC
+
 ** weight_thresholded
 
-#+BEGIN_EXAMPLE
----
-stamp:
-  sec: 1676470255
-  nanosec: 932870887
-weight: 520.8601184710001
----
-stamp:
-  sec: 1676470256
-  nanosec: 19947998
-weight: 504.39471544000014
----
-stamp:
-  sec: 1676470256
-  nanosec: 161346684
-weight: 499.8134325030001
----
-stamp:
-  sec: 1676470256
-  nanosec: 301352968
-weight: 498.5887331040001
----
-#+END_EXAMPLE
+Send some messages from the digital scale one at a time along with a timestamp
+for that measurement, if the weight value exceeds a threshold. The threshold
+value is set with the threshold parameter.
 
 #+BEGIN_SRC text :noweb yes
 ---
@@ -362,6 +367,93 @@ stamp:
   nanosec: 301352968
 weight: 498.5887331040001
 ---
+#+END_SRC
+
+#+BEGIN_SRC text :noweb yes
+$ ros2 topic hz /weight_thresholded
+average rate: 503.230
+	min: 0.000s max: 0.054s std dev: 0.00695s window: 5102
+average rate: 503.906
+	min: 0.000s max: 0.054s std dev: 0.00697s window: 5613
+#+END_SRC
+
+** weight_array
+
+Send an array of Weight messages to increase the size and decrease the frequency
+of messages published on this topic. The maximum array length is set by the
+weight_array_length_max parameter.
+
+#+BEGIN_SRC text :noweb yes
+---
+array:
+- stamp:
+    sec: 1676473446
+    nanosec: 920160731
+  weight: 2.0411656650000003
+- stamp:
+    sec: 1676473446
+    nanosec: 921633371
+  weight: 2.0411656650000003
+- stamp:
+    sec: 1676473446
+    nanosec: 922349652
+  weight: 2.0865249020000003
+- stamp:
+    sec: 1676473446
+    nanosec: 922925743
+  weight: 2.0865249020000003
+- '...'
+---
+#+END_SRC
+
+#+BEGIN_SRC text :noweb yes
+$ ros2 topic hz /weight_array
+average rate: 0.287
+	min: 3.460s max: 3.495s std dev: 0.01312s window: 4
+average rate: 0.288
+	min: 3.454s max: 3.495s std dev: 0.01571s window: 5
+#+END_SRC
+
+** weight_array_thresholded
+
+Send an array of Weight messages to increase the size and decrease the frequency
+of messages published on this topic. The maximum array length is set by the
+weight_array_length_max parameter.
+
+Only include weight messages in the array if the weight value exceeds a
+threshold. The threshold value is set with the threshold parameter.
+
+Do not send empty arrays.
+
+#+BEGIN_SRC text :noweb yes
+---
+array:
+- stamp:
+    sec: 1676473988
+    nanosec: 201336549
+  weight: 491.467332895
+- stamp:
+    sec: 1676473988
+    nanosec: 202358047
+  weight: 491.467332895
+- stamp:
+    sec: 1676473988
+    nanosec: 203483274
+  weight: 491.467332895
+- stamp:
+    sec: 1676473988
+    nanosec: 204520182
+  weight: 491.467332895
+- '...'
+---
+#+END_SRC
+
+#+BEGIN_SRC text :noweb yes
+$ ros2 topic hz /weight_array_thresholded
+average rate: 0.251
+	min: 3.933s max: 4.048s std dev: 0.04806s window: 4
+average rate: 0.251
+	min: 3.933s max: 4.048s std dev: 0.04406s window: 5
 #+END_SRC
 
 * Setup
@@ -566,7 +658,7 @@ source <<ros-workspace-path>>/install/setup.bash && \
 ros2 run <<weigher-package>> <<weigher-executable>>
 #+END_SRC
 
-**** Echo the weigher topic
+**** Echo the weigher topics
 
 #+BEGIN_SRC sh :noweb yes
 # Open a new termial
@@ -1051,6 +1143,16 @@ make -f /home/weigher/<<repository-name>>/.metadata/Makefile docker-echo-weight
         }
     ]
 }
+#+END_SRC
+
+#+HEADER: :tangle (if tangle-external-files "../weigher_interfaces/msg/Weight.msg" "no")
+#+BEGIN_SRC text :exports none :noweb yes
+<<weight-message>>
+#+END_SRC
+
+#+HEADER: :tangle (if tangle-external-files "../weigher_interfaces/msg/WeightArray.msg" "no")
+#+BEGIN_SRC text :exports none :noweb yes
+<<weight-array-message>>
 #+END_SRC
 
 #+NAME: license-text

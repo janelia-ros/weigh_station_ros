@@ -1,14 +1,15 @@
-- [About](#org95f4cc4)
-- [Usage](#orgd9d6b1c)
-- [Topics](#orgcb6ba48)
-- [Setup](#org1fcf85c)
-- [Development](#org4dcbb7e)
+- [About](#orgcffc979)
+- [Usage](#org78a42bb)
+- [Messages](#orgf4f5c83)
+- [Topics](#orgeacdce3)
+- [Setup](#org89a3f04)
+- [Development](#org28435d2)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="org95f4cc4"></a>
+<a id="orgcffc979"></a>
 
 # About
 
@@ -21,11 +22,14 @@
 - Version: 1.0.0
 - Weigher Package: weigher
 - Weigher Launch File: weigher_launch.py
+- Weigher Messages:
+  - Weight.msg
+  - WeightArray.msg
 - Weigher Topics:
   - /weight
   - /weight_thresholded
-- Weigher Messages:
-  - Weight.msg
+  - /weight_array
+  - /weight_array_thresholded
 - Release Date: 2023-02-15
 - Creation Date: 2022-12-14
 - License: BSD-3-Clause
@@ -39,7 +43,7 @@
 ```
 
 
-<a id="orgd9d6b1c"></a>
+<a id="org78a42bb"></a>
 
 # Usage
 
@@ -64,6 +68,8 @@ On a computer connected to the same network as the Raspberry Pi, either use Dock
     ```sh
     docker run -it --net=host --pid=host weigher:latest ros2 topic echo /weight
     docker run -it --net=host --pid=host weigher:latest ros2 topic echo /weight_thresholded
+    docker run -it --net=host --pid=host weigher:latest ros2 topic echo /weight_array
+    docker run -it --net=host --pid=host weigher:latest ros2 topic echo /weight_array_thresholded
     ```
 
 2.  ROS 2 on Ubuntu
@@ -72,6 +78,8 @@ On a computer connected to the same network as the Raspberry Pi, either use Dock
     source ~/ros2_ws/install/setup.bash
     ros2 topic echo /weight
     ros2 topic echo /weight_thresholded
+    ros2 topic echo /weight_array
+    ros2 topic echo /weight_array_thresholded
     ```
 
 
@@ -90,7 +98,7 @@ ssh weigher@weigher.local
 <https://weigher.lan:9090/>
 
 -   username: weigher
--   password: ******\*******
+-   password:
 
 
 ### Echo weight topic in Raspberry Pi terminal
@@ -100,34 +108,42 @@ echo-weight
 ```
 
 
-<a id="orgcb6ba48"></a>
+<a id="orgf4f5c83"></a>
+
+# Messages
+
+
+## Weight.msg
+
+```text
+# This file is generated automatically from metadata
+# File edits may be overwritten!
+
+# Single weight reading.
+builtin_interfaces/Time stamp
+float64 weight # Measurement of the Weight in grams.
+```
+
+
+## WeightArray.msg
+
+```text
+# This file is generated automatically from metadata
+# File edits may be overwritten!
+
+# Multiple weight readings.
+Weight[] array
+```
+
+
+<a id="orgeacdce3"></a>
 
 # Topics
 
 
 ## weight
 
-    ---
-    stamp:
-      sec: 1676470173
-      nanosec: 765260627
-    weight: 0.13607771100000002
-    ---
-    stamp:
-      sec: 1676470173
-      nanosec: 883177140
-    weight: 0.0
-    ---
-    stamp:
-      sec: 1676470174
-      nanosec: 11527425
-    weight: 0.04535923700000001
-    ---
-    stamp:
-      sec: 1676470174
-      nanosec: 176475007
-    weight: 0.18143694800000004
-    ---
+Send all messages from the digital scale one at a time along with a timestamp for that measurement.
 
 ```text
 ---
@@ -153,30 +169,18 @@ weight: 0.18143694800000004
 ---
 ```
 
+```text
+$ ros2 topic hz /weight
+average rate: 574.719
+        min: 0.000s max: 0.038s std dev: 0.00568s window: 2338
+average rate: 576.536
+        min: 0.000s max: 0.038s std dev: 0.00566s window: 2922
+```
+
 
 ## weight\_thresholded
 
-    ---
-    stamp:
-      sec: 1676470255
-      nanosec: 932870887
-    weight: 520.8601184710001
-    ---
-    stamp:
-      sec: 1676470256
-      nanosec: 19947998
-    weight: 504.39471544000014
-    ---
-    stamp:
-      sec: 1676470256
-      nanosec: 161346684
-    weight: 499.8134325030001
-    ---
-    stamp:
-      sec: 1676470256
-      nanosec: 301352968
-    weight: 498.5887331040001
-    ---
+Send some messages from the digital scale one at a time along with a timestamp for that measurement, if the weight value exceeds a threshold. The threshold value is set with the threshold parameter.
 
 ```text
 ---
@@ -202,8 +206,92 @@ weight: 498.5887331040001
 ---
 ```
 
+```text
+$ ros2 topic hz /weight_thresholded
+average rate: 503.230
+        min: 0.000s max: 0.054s std dev: 0.00695s window: 5102
+average rate: 503.906
+        min: 0.000s max: 0.054s std dev: 0.00697s window: 5613
+```
 
-<a id="org1fcf85c"></a>
+
+## weight\_array
+
+Send an array of Weight messages to increase the size and decrease the frequency of messages published on this topic. The maximum array length is set by the weight\_array\_length\_max parameter.
+
+```text
+---
+array:
+- stamp:
+    sec: 1676473446
+    nanosec: 920160731
+  weight: 2.0411656650000003
+- stamp:
+    sec: 1676473446
+    nanosec: 921633371
+  weight: 2.0411656650000003
+- stamp:
+    sec: 1676473446
+    nanosec: 922349652
+  weight: 2.0865249020000003
+- stamp:
+    sec: 1676473446
+    nanosec: 922925743
+  weight: 2.0865249020000003
+- '...'
+---
+```
+
+```text
+$ ros2 topic hz /weight_array
+average rate: 0.287
+        min: 3.460s max: 3.495s std dev: 0.01312s window: 4
+average rate: 0.288
+        min: 3.454s max: 3.495s std dev: 0.01571s window: 5
+```
+
+
+## weight\_array\_thresholded
+
+Send an array of Weight messages to increase the size and decrease the frequency of messages published on this topic. The maximum array length is set by the weight\_array\_length\_max parameter.
+
+Only include weight messages in the array if the weight value exceeds a threshold. The threshold value is set with the threshold parameter.
+
+Do not send empty arrays.
+
+```text
+---
+array:
+- stamp:
+    sec: 1676473988
+    nanosec: 201336549
+  weight: 491.467332895
+- stamp:
+    sec: 1676473988
+    nanosec: 202358047
+  weight: 491.467332895
+- stamp:
+    sec: 1676473988
+    nanosec: 203483274
+  weight: 491.467332895
+- stamp:
+    sec: 1676473988
+    nanosec: 204520182
+  weight: 491.467332895
+- '...'
+---
+```
+
+```text
+$ ros2 topic hz /weight_array_thresholded
+average rate: 0.251
+        min: 3.933s max: 4.048s std dev: 0.04806s window: 4
+average rate: 0.251
+        min: 3.933s max: 4.048s std dev: 0.04406s window: 5
+```
+
+
+<a id="org89a3f04"></a>
 
 # Setup
 
@@ -334,7 +422,7 @@ weight: 498.5887331040001
     ```
 
 
-<a id="org4dcbb7e"></a>
+<a id="org28435d2"></a>
 
 # Development
 
@@ -426,13 +514,15 @@ docker exec -it container-name bash
         ros2 run weigher weigher
         ```
 
-2.  Echo the weigher topic
+2.  Echo the weigher topics
 
     ```sh
     # Open a new termial
     source ~/ros2_ws/install/setup.bash
     ros2 topic echo /weight
     ros2 topic echo /weight_thresholded
+    ros2 topic echo /weight_array
+    ros2 topic echo /weight_array_thresholded
     ```
 
 

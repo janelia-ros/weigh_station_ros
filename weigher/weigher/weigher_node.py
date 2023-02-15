@@ -1,7 +1,7 @@
 import rclpy
 from rclpy.node import Node
 
-from weigher_interfaces.msg import Weight
+from weigher_interfaces.msg import Weight, WeightArray
 
 from loadstar_sensors_interface import LoadstarSensorsInterface
 import asyncio
@@ -19,18 +19,26 @@ class Weigher(Node):
         self.declare_parameter('debug', False)
         self.declare_parameter('serial_port', '/dev/ttyUSB0')
         self.declare_parameter('threshold', 100)
+        self.declare_parameter('weight_array_length_max', 2000)
 
         # publishers
         self._pub_weight = self.create_publisher(Weight, 'weight', 10)
         self._pub_weight_thresholded = self.create_publisher(Weight, 'weight_thresholded', 10)
+        self._pub_weight_array = self.create_publisher(WeightArray, 'weight_array', 10)
+        self._pub_weight_array_thresholded = self.create_publisher(WeightArray, 'weight_array_thresholded', 10)
 
         # scale device
         debug = self.get_parameter('debug').get_parameter_value().bool_value
         self._dev = LoadstarSensorsInterface(debug=debug)
 
     async def start_getting_sensor_values(self):
+        # parameters
         serial_port = self.get_parameter('serial_port').get_parameter_value().string_value
         self._threshold = self.get_parameter('threshold').get_parameter_value().integer_value
+        self._weight_array_length_max = self.get_parameter('weight_array_length_max').get_parameter_value().integer_value
+        self._weight_array_length = 0
+        self._weight_array = []
+        self._weight_array_thresholded = []
 
         self.get_logger().info(f'start_getting_sensor_values on serial port: {serial_port}')
 
@@ -46,12 +54,32 @@ class Weigher(Node):
         await self._dev.stop_getting_sensor_values()
 
     async def sensor_value_callback(self, sensor_value):
-        msg = Weight()
-        msg.stamp = self.get_clock().now().to_msg()
-        msg.weight = sensor_value.magnitude
-        self._pub_weight.publish(msg)
+        if self._weight_array_length == self._weight_array_length_max:
+            self._weight_array_length = 0
+
+            weight_array_msg = WeightArray()
+            weight_array_msg.array = self._weight_array
+            self._pub_weight_array.publish(weight_array_msg)
+            self._weight_array = []
+
+            if len(self._weight_array_thresholded) > 0:
+                weight_array_thresholded_msg = WeightArray()
+                weight_array_thresholded_msg.array = self._weight_array_thresholded
+                self._pub_weight_array_thresholded.publish(weight_array_thresholded_msg)
+                self._weight_array_thresholded = []
+
+        weight_msg = Weight()
+        weight_msg.stamp = self.get_clock().now().to_msg()
+        weight_msg.weight = sensor_value.magnitude
+        self._pub_weight.publish(weight_msg)
+
+        self._weight_array.append(weight_msg)
+        self._weight_array_length += 1
+
         if sensor_value.magnitude >= self._threshold:
-            self._pub_weight_thresholded.publish(msg)
+            self._pub_weight_thresholded.publish(weight_msg)
+            self._weight_array_thresholded.append(weight_msg)
+
         await asyncio.sleep(0)
 
 

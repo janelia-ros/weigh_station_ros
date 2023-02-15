@@ -11,10 +11,14 @@ def generate_launch_description():
     threshold_arg = DeclareLaunchArgument(
       'threshold', default_value=TextSubstitution(text='100')
     )
+    weight_array_length_max_arg = DeclareLaunchArgument(
+      'weight_array_length_max', default_value=TextSubstitution(text='2000')
+    )
 
     return LaunchDescription([
         serial_port_arg,
         threshold_arg,
+        weight_array_length_max_arg,
         Node(
             package='weigher',
             executable='weigher',
@@ -22,6 +26,7 @@ def generate_launch_description():
             parameters=[{
             'serial_port': LaunchConfiguration('serial_port'),
             'threshold': LaunchConfiguration('threshold'),
+            'weight_array_length_max': LaunchConfiguration('weight_array_length_max'),
          }]
         )
     ])

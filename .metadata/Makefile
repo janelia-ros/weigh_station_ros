@@ -65,8 +65,6 @@ pi-apt-dependencies:
 pi-setup: pi-apt-dependencies
 	python3 .metadata/pi/pi_setup.py install;\
 	sudo chmod +x /usr/local/bin/find_device_then_run.py;\
-	sudo chmod +x /usr/local/bin/echo-weight-array;\
-	sudo chmod +x /usr/local/bin/echo-weight-array-thresholded;\
 
 PORT = /dev/ttyUSB0
 DOCKER-CONTAINER-PORT = docker run -it --net=host --pid=host --device=$(PORT) weigher:latest
@@ -86,3 +84,7 @@ docker-echo-weight-array:
 .PHONY: docker-echo-weight-array-thresholded
 docker-echo-weight-array-thresholded:
 	$(DOCKER-CONTAINER) ros2 topic echo /weigher/weight_array_thresholded
+
+.PHONY: docker-tare
+docker-tare:
+	$(DOCKER-CONTAINER-PORT) ros2 ros2 service call /weigher/tare weigher_interfaces/srv/Tare

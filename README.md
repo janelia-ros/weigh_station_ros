@@ -1,17 +1,17 @@
-- [About](#org01fce9d)
-- [Usage](#orgd749486)
-- [Messages](#org2108268)
-- [Topics](#orga47a18d)
-- [Service Files](#orgb8e4e56)
-- [Services](#org4b41f24)
-- [Setup](#org4c0754a)
-- [Development](#org244c638)
+- [About](#orgd7dde06)
+- [Usage](#org900fc47)
+- [Messages](#org5b4f249)
+- [Topics](#orgbc68f39)
+- [Service Files](#org475ecd4)
+- [Services](#org96e5eb4)
+- [Setup](#orgcedffd2)
+- [Development](#orgde37616)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="org01fce9d"></a>
+<a id="orgd7dde06"></a>
 
 # About
 
@@ -50,7 +50,7 @@
 ```
 
 
-<a id="orgd749486"></a>
+<a id="org900fc47"></a>
 
 # Usage
 
@@ -131,15 +131,7 @@ ssh weigher@weigher.local
 -   password:
 
 
-### Echo weight array topics in Raspberry Pi terminal
-
-```sh
-echo-weight-array
-echo-weight-array-thresholded
-```
-
-
-<a id="org2108268"></a>
+<a id="org5b4f249"></a>
 
 # Messages
 
@@ -167,7 +159,7 @@ Weight[] array
 ```
 
 
-<a id="orga47a18d"></a>
+<a id="orgbc68f39"></a>
 
 # Topics
 
@@ -326,7 +318,7 @@ average rate: 0.251
 ```
 
 
-<a id="orgb8e4e56"></a>
+<a id="org475ecd4"></a>
 
 # Service Files
 
@@ -343,7 +335,7 @@ bool success
 ```
 
 
-<a id="org4b41f24"></a>
+<a id="org96e5eb4"></a>
 
 # Services
 
@@ -359,7 +351,7 @@ weigher_interfaces.srv.Tare_Response(stamp=builtin_interfaces.msg.Time(sec=16764
 ```
 
 
-<a id="org4c0754a"></a>
+<a id="orgcedffd2"></a>
 
 # Setup
 
@@ -491,7 +483,7 @@ weigher_interfaces.srv.Tare_Response(stamp=builtin_interfaces.msg.Time(sec=16764
     ```
 
 
-<a id="org244c638"></a>
+<a id="orgde37616"></a>
 
 # Development
 
@@ -524,6 +516,14 @@ make -f .metadata/Makefile docker-publish-weight
 
 ```sh
 make -f .metadata/Makefile docker-echo-weight-array
+make -f .metadata/Makefile docker-echo-weight-array-thresholded
+```
+
+
+### Run Docker container and tare scale
+
+```sh
+make -f .metadata/Makefile docker-tare
 ```
 
 

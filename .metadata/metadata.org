@@ -330,13 +330,6 @@ ssh weigher@weigher.local
 - username: weigher
 - password:
 
-*** Echo weight array topics in Raspberry Pi terminal
-
-#+BEGIN_SRC sh :noweb yes
-echo-weight-array
-echo-weight-array-thresholded
-#+END_SRC
-
 * Messages
 
 ** Weight.msg
@@ -681,6 +674,13 @@ make -f .metadata/Makefile docker-publish-weight
 
 #+BEGIN_SRC sh :noweb yes
 make -f .metadata/Makefile docker-echo-weight-array
+make -f .metadata/Makefile docker-echo-weight-array-thresholded
+#+END_SRC
+
+*** Run Docker container and tare scale
+
+#+BEGIN_SRC sh :noweb yes
+make -f .metadata/Makefile docker-tare
 #+END_SRC
 
 *** Stop all Docker containers
@@ -888,8 +888,6 @@ pi-apt-dependencies:
 pi-setup: pi-apt-dependencies
 	python3 .metadata/pi/pi_setup.py install;\
 	sudo chmod +x /usr/local/bin/find_device_then_run.py;\
-	sudo chmod +x /usr/local/bin/echo-weight-array;\
-	sudo chmod +x /usr/local/bin/echo-weight-array-thresholded;\
 
 PORT = /dev/ttyUSB0
 DOCKER-CONTAINER-PORT = docker run -it --net=host --pid=host --device=$(PORT) <<docker-image-name>>
@@ -909,6 +907,10 @@ docker-echo-weight-array:
 .PHONY: docker-echo-weight-array-thresholded
 docker-echo-weight-array-thresholded:
 	$(DOCKER-CONTAINER) ros2 topic echo /<<weigher-node-name>>/weight_array_thresholded
+
+.PHONY: docker-tare
+docker-tare:
+	$(DOCKER-CONTAINER-PORT) ros2 ros2 service call /<<weigher-node-name>>/tare weigher_interfaces/srv/Tare
 #+END_SRC
 
 #+BEGIN_SRC scheme :tangle emacs/init.el :exports none :noweb yes
@@ -1183,18 +1185,6 @@ def cli(dry_run):
 # -----------------------------------------------------------------------------------------
 if __name__ == '__main__':
     cli()
-#+END_SRC
-
-#+HEADER: :tangle (if tangle-external-files "pi/root/usr/local/bin/echo-weight-array" "no")
-#+BEGIN_SRC sh :exports none :noweb yes
-#!/bin/bash
-make -f /home/weigher/<<repository-name>>/.metadata/Makefile docker-echo-weight-array
-#+END_SRC
-
-#+HEADER: :tangle (if tangle-external-files "pi/root/usr/local/bin/echo-weight-array-thresholded" "no")
-#+BEGIN_SRC sh :exports none :noweb yes
-#!/bin/bash
-make -f /home/weigher/<<repository-name>>/.metadata/Makefile docker-echo-weight-array-thresholded
 #+END_SRC
 
 #+HEADER: :tangle (if tangle-external-files "../AUTHORS" "no")

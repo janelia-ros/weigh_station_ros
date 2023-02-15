@@ -911,7 +911,7 @@ docker-echo-weight-array-thresholded:
 
 .PHONY: docker-tare
 docker-tare:
-	$(DOCKER-CONTAINER-PORT) ros2 ros2 service call /<<weigher-node-name>>/tare weigher_interfaces/srv/Tare
+	$(DOCKER-CONTAINER) ros2 service call /<<weigher-node-name>>/tare weigher_interfaces/srv/Tare
 #+END_SRC
 
 #+BEGIN_SRC scheme :tangle emacs/init.el :exports none :noweb yes

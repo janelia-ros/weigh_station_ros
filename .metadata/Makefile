@@ -87,4 +87,4 @@ docker-echo-weight-array-thresholded:
 
 .PHONY: docker-tare
 docker-tare:
-	$(DOCKER-CONTAINER-PORT) ros2 ros2 service call /weigher/tare weigher_interfaces/srv/Tare
+	$(DOCKER-CONTAINER) ros2 service call /weigher/tare weigher_interfaces/srv/Tare

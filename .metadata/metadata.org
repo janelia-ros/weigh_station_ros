@@ -72,12 +72,13 @@ weigher
 weigher_launch.py
 #+END_SRC
 
-#+NAME: weigher-topic
+#+NAME: weigher-topics
 #+BEGIN_SRC text :exports none :noweb yes
 /weight
+/weight_thresholded
 #+END_SRC
 
-#+NAME: weigher-message
+#+NAME: weigher-messages
 #+BEGIN_SRC text :exports none :noweb yes
 Weight.msg
 #+END_SRC
@@ -194,8 +195,10 @@ Python 3
 - Version: <<version>>
 - Weigher Package: <<weigher-package>>
 - Weigher Launch File: <<weigher-launch-file>>
-- Weigher Topic: <<weigher-topic>>
-- Weigher Message: <<weigher-message>>
+- Weigher Topics:
+  - <<weigher-topics>>
+- Weigher Messages:
+  - <<weigher-messages>>
 - Release Date: <<release-date>>
 - Creation Date: <<creation-date>>
 - License: <<license>>
@@ -222,19 +225,20 @@ Scale will be tared on power up and automatically begin publishing weight messag
 On a computer connected to the same network as the Raspberry Pi, either use
 Docker or install ROS 2 to subscribe to weight messages.
 
-*** Echo weight topic on network computer
+*** Echo weight topics on network computer
 
 **** Docker
 
 #+BEGIN_SRC sh :noweb yes
-docker run -it --net=host --pid=host <<docker-image-name>> ros2 topic echo <<weigher-topic>>
+docker run -it --net=host --pid=host <<docker-image-name>> ros2 topic echo /weight
+docker run -it --net=host --pid=host <<docker-image-name>> ros2 topic echo /weight_thresholded
 #+END_SRC
 
 **** ROS 2 on Ubuntu
 
 #+BEGIN_SRC sh :noweb yes
-source <<ros-workspace-path>>/install/setup.bash && \
-ros2 topic echo <<weigher-topic>>
+source <<ros-workspace-path>>/install/setup.bash
+ros2 topic echo <<weigher-topics>>
 #+END_SRC
 
 ** Connect to Raspberry Pi for development and monitoring
@@ -464,8 +468,8 @@ ros2 run <<weigher-package>> <<weigher-executable>>
 
 #+BEGIN_SRC sh :noweb yes
 # Open a new termial
-source <<ros-workspace-path>>/install/setup.bash && \
-ros2 topic echo <<weigher-topic>>
+source <<ros-workspace-path>>/install/setup.bash
+ros2 topic echo <<weigher-topics>>
 #+END_SRC
 
 ** Raspberry Pi
@@ -629,7 +633,7 @@ docker-publish-weight:
 
 .PHONY: docker-echo-weight
 docker-echo-weight:
-	$(DOCKER-CONTAINER) ros2 topic echo <<weigher-topic>>
+	$(DOCKER-CONTAINER) ros2 topic echo /weight
 #+END_SRC
 
 #+BEGIN_SRC scheme :tangle emacs/init.el :exports none :noweb yes

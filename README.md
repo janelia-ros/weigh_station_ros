@@ -1,13 +1,13 @@
-- [About](#orgbf320a6)
-- [Usage](#orga9fd126)
-- [Setup](#orge910af9)
-- [Development](#org5605326)
+- [About](#orga8d5989)
+- [Usage](#orgd191cb4)
+- [Setup](#org3c3c448)
+- [Development](#org124662f)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="orgbf320a6"></a>
+<a id="orga8d5989"></a>
 
 # About
 
@@ -20,9 +20,12 @@
 - Version: 1.0.0
 - Weigher Package: weigher
 - Weigher Launch File: weigher_launch.py
-- Weigher Topic: /weight
-- Weigher Message: Weight.msg
-- Release Date: 2023-02-14
+- Weigher Topics:
+  - /weight
+  - /weight_thresholded
+- Weigher Messages:
+  - Weight.msg
+- Release Date: 2023-02-15
 - Creation Date: 2022-12-14
 - License: BSD-3-Clause
 - URL: https://github.com/janelia-ros/weigher_ros
@@ -35,7 +38,7 @@
 ```
 
 
-<a id="orga9fd126"></a>
+<a id="orgd191cb4"></a>
 
 # Usage
 
@@ -53,19 +56,21 @@ Scale will be tared on power up and automatically begin publishing weight messag
 On a computer connected to the same network as the Raspberry Pi, either use Docker or install ROS 2 to subscribe to weight messages.
 
 
-### Echo weight topic on network computer
+### Echo weight topics on network computer
 
 1.  Docker
 
     ```sh
     docker run -it --net=host --pid=host weigher:latest ros2 topic echo /weight
+    docker run -it --net=host --pid=host weigher:latest ros2 topic echo /weight_thresholded
     ```
 
 2.  ROS 2 on Ubuntu
 
     ```sh
-    source ~/ros2_ws/install/setup.bash && \
+    source ~/ros2_ws/install/setup.bash
     ros2 topic echo /weight
+    ros2 topic echo /weight_thresholded
     ```
 
 
@@ -94,7 +99,7 @@ echo-weight
 ```
 
 
-<a id="orge910af9"></a>
+<a id="org3c3c448"></a>
 
 # Setup
 
@@ -225,7 +230,7 @@ echo-weight
     ```
 
 
-<a id="org5605326"></a>
+<a id="org124662f"></a>
 
 # Development
 
@@ -321,8 +326,9 @@ docker exec -it container-name bash
 
     ```sh
     # Open a new termial
-    source ~/ros2_ws/install/setup.bash && \
+    source ~/ros2_ws/install/setup.bash
     ros2 topic echo /weight
+    ros2 topic echo /weight_thresholded
     ```
 
 

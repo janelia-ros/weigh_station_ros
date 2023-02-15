@@ -14,6 +14,7 @@ def generate_launch_description():
 
     return LaunchDescription([
         serial_port_arg,
+        threshold_arg,
         Node(
             package='weigher',
             executable='weigher',

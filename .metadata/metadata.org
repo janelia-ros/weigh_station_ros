@@ -62,6 +62,11 @@ https://github.com/janelia-pypi/loadstar_sensors_interface_python
 weigher
 #+END_SRC
 
+#+NAME: weigher-node-name
+#+BEGIN_SRC text :exports none :noweb yes
+weigher
+#+END_SRC
+
 #+NAME: weigher-executable
 #+BEGIN_SRC text :exports none :noweb yes
 weigher
@@ -99,10 +104,30 @@ Weight[] array
 
 #+NAME: weigher-topics
 #+BEGIN_SRC text :exports none :noweb yes
-/weight
-/weight_thresholded
-/weight_array
-/weight_array_thresholded
+/<<weigher-node-name>>/weight
+/<<weigher-node-name>>/weight_thresholded
+/<<weigher-node-name>>/weight_array
+/<<weigher-node-name>>/weight_array_thresholded
+#+END_SRC
+
+#+NAME: weigher-service-files
+#+BEGIN_SRC text :exports none :noweb yes
+Tare.srv
+#+END_SRC
+
+#+NAME: tare-service-file
+#+BEGIN_SRC text :exports none :noweb yes
+# This file is generated automatically from metadata
+# File edits may be overwritten!
+
+---
+builtin_interfaces/Time stamp
+bool success
+#+END_SRC
+
+#+NAME: weigher-services
+#+BEGIN_SRC text :exports none :noweb yes
+/<<weigher-node-name>>/tare
 #+END_SRC
 
 #+NAME: docker-image-name
@@ -216,11 +241,16 @@ Python 3
 - Description: <<description>>
 - Version: <<version>>
 - Weigher Package: <<weigher-package>>
+- Weigher Node Name: <<weigher-node-name>>
 - Weigher Launch File: <<weigher-launch-file>>
 - Weigher Messages:
   - <<weigher-messages>>
 - Weigher Topics:
   - <<weigher-topics>>
+- Weigher Service Files:
+  - <<weigher-service-files>>
+- Weigher Services:
+  - <<weigher-services>>
 - Release Date: <<release-date>>
 - Creation Date: <<creation-date>>
 - License: <<license>>
@@ -251,10 +281,10 @@ Docker or install ROS 2 to subscribe to weight messages.
 
 #+BEGIN_SRC sh :noweb yes
 docker run -it --net=host --pid=host <<docker-image-name>> ros2 topic list
-docker run -it --net=host --pid=host <<docker-image-name>> ros2 topic echo /weight
-docker run -it --net=host --pid=host <<docker-image-name>> ros2 topic echo /weight_thresholded
-docker run -it --net=host --pid=host <<docker-image-name>> ros2 topic echo /weight_array
-docker run -it --net=host --pid=host <<docker-image-name>> ros2 topic echo /weight_array_thresholded
+docker run -it --net=host --pid=host <<docker-image-name>> ros2 topic echo /<<weigher-node-name>>/weight
+docker run -it --net=host --pid=host <<docker-image-name>> ros2 topic echo /<<weigher-node-name>>/weight_thresholded
+docker run -it --net=host --pid=host <<docker-image-name>> ros2 topic echo /<<weigher-node-name>>/weight_array
+docker run -it --net=host --pid=host <<docker-image-name>> ros2 topic echo /<<weigher-node-name>>/weight_array_thresholded
 #+END_SRC
 
 *** ROS 2 on Ubuntu
@@ -263,6 +293,26 @@ docker run -it --net=host --pid=host <<docker-image-name>> ros2 topic echo /weig
 source <<ros-workspace-path>>/install/setup.bash
 ros2 topic list
 ros2 topic echo <<weigher-topics>>
+#+END_SRC
+
+** Services
+
+On a computer connected to the same network as the Raspberry Pi, either use
+Docker or install ROS 2 to use weigher services.
+
+*** Docker
+
+#+BEGIN_SRC sh :noweb yes
+docker run -it --net=host --pid=host <<docker-image-name>> ros2 service list
+docker run -it --net=host --pid=host <<docker-image-name>> ros2 service call /<<weigher-node-name>>/tare weigher_interfaces/srv/Tare
+#+END_SRC
+
+*** ROS 2 on Ubuntu
+
+#+BEGIN_SRC sh :noweb yes
+source <<ros-workspace-path>>/install/setup.bash
+ros2 service list
+ros2 service call /<<weigher-node-name>>/tare weigher_interfaces/srv/Tare
 #+END_SRC
 
 ** Connect to Raspberry Pi for development and monitoring
@@ -309,7 +359,7 @@ Send all messages from the digital scale one at a time along with a timestamp
 for that measurement.
 
 #+BEGIN_SRC text :noweb yes
-$ ros2 topic echo /weight
+$ ros2 topic echo /<<weigher-node-name>>/weight
 ---
 stamp:
   sec: 1676470173
@@ -334,7 +384,7 @@ weight: 0.18143694800000004
 #+END_SRC
 
 #+BEGIN_SRC text :noweb yes
-$ ros2 topic hz /weight
+$ ros2 topic hz /<<weigher-node-name>>/weight
 average rate: 574.719
 	min: 0.000s max: 0.038s std dev: 0.00568s window: 2338
 average rate: 576.536
@@ -348,7 +398,7 @@ for that measurement, if the weight value exceeds a threshold. The threshold
 value is set with the threshold parameter.
 
 #+BEGIN_SRC text :noweb yes
-$ ros2 topic echo /weight_thresholded
+$ ros2 topic echo /<<weigher-node-name>>/weight_thresholded
 ---
 stamp:
   sec: 1676470255
@@ -373,7 +423,7 @@ weight: 498.5887331040001
 #+END_SRC
 
 #+BEGIN_SRC text :noweb yes
-$ ros2 topic hz /weight_thresholded
+$ ros2 topic hz /<<weigher-node-name>>/weight_thresholded
 average rate: 503.230
 	min: 0.000s max: 0.054s std dev: 0.00695s window: 5102
 average rate: 503.906
@@ -387,7 +437,7 @@ of messages published on this topic. The maximum array length is set by the
 weight_array_length_max parameter.
 
 #+BEGIN_SRC text :noweb yes
-$ ros2 topic echo /weight_array
+$ ros2 topic echo /<<weigher-node-name>>/weight_array
 ---
 array:
 - stamp:
@@ -411,7 +461,7 @@ array:
 #+END_SRC
 
 #+BEGIN_SRC text :noweb yes
-$ ros2 topic hz /weight_array
+$ ros2 topic hz /<<weigher-node-name>>/weight_array
 average rate: 0.287
 	min: 3.460s max: 3.495s std dev: 0.01312s window: 4
 average rate: 0.288
@@ -430,7 +480,7 @@ threshold. The threshold value is set with the threshold parameter.
 Do not send empty arrays.
 
 #+BEGIN_SRC text :noweb yes
-$ ros2 topic echo /weight_array_thresholded
+$ ros2 topic echo /<<weigher-node-name>>/weight_array_thresholded
 ---
 array:
 - stamp:
@@ -454,11 +504,31 @@ array:
 #+END_SRC
 
 #+BEGIN_SRC text :noweb yes
-$ ros2 topic hz /weight_array_thresholded
+$ ros2 topic hz /<<weigher-node-name>>/weight_array_thresholded
 average rate: 0.251
 	min: 3.933s max: 4.048s std dev: 0.04806s window: 4
 average rate: 0.251
 	min: 3.933s max: 4.048s std dev: 0.04406s window: 5
+#+END_SRC
+
+* Service Files
+
+** Tare.srv
+
+#+BEGIN_SRC text :noweb yes
+<<tare-service-file>>
+#+END_SRC
+
+* Services
+
+** tare
+
+#+BEGIN_SRC text :noweb yes
+$ ros2 service call /weigher/tare weigher_interfaces/srv/Tare
+requester: making request: weigher_interfaces.srv.Tare_Request()
+
+response:
+weigher_interfaces.srv.Tare_Response(stamp=builtin_interfaces.msg.Time(sec=1676492636, nanosec=617772030), success=True)
 #+END_SRC
 
 * Setup
@@ -834,11 +904,11 @@ docker-publish-weight:
 
 .PHONY: docker-echo-weight-array
 docker-echo-weight-array:
-	$(DOCKER-CONTAINER) ros2 topic echo /weight_array
+	$(DOCKER-CONTAINER) ros2 topic echo /<<weigher-node-name>>/weight_array
 
 .PHONY: docker-echo-weight-array-thresholded
 docker-echo-weight-array-thresholded:
-	$(DOCKER-CONTAINER) ros2 topic echo /weight_array_thresholded
+	$(DOCKER-CONTAINER) ros2 topic echo /<<weigher-node-name>>/weight_array_thresholded
 #+END_SRC
 
 #+BEGIN_SRC scheme :tangle emacs/init.el :exports none :noweb yes
@@ -1170,6 +1240,11 @@ make -f /home/weigher/<<repository-name>>/.metadata/Makefile docker-echo-weight-
 #+HEADER: :tangle (if tangle-external-files "../weigher_interfaces/msg/WeightArray.msg" "no")
 #+BEGIN_SRC text :exports none :noweb yes
 <<weight-array-message>>
+#+END_SRC
+
+#+HEADER: :tangle (if tangle-external-files "../weigher_interfaces/srv/Tare.srv")
+#+BEGIN_SRC text :exports none :noweb yes
+<<tare-service-file>>
 #+END_SRC
 
 #+NAME: license-text

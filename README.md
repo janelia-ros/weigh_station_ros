@@ -1,15 +1,17 @@
-- [About](#orgad57c71)
-- [Usage](#orgd369d98)
-- [Messages](#org35f00da)
-- [Topics](#org065560c)
-- [Setup](#orgdc7edf1)
-- [Development](#orgb112e13)
+- [About](#org01fce9d)
+- [Usage](#orgd749486)
+- [Messages](#org2108268)
+- [Topics](#orga47a18d)
+- [Service Files](#orgb8e4e56)
+- [Services](#org4b41f24)
+- [Setup](#org4c0754a)
+- [Development](#org244c638)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="orgad57c71"></a>
+<a id="org01fce9d"></a>
 
 # About
 
@@ -21,15 +23,20 @@
 - Description: This repository contains ROS 2 packages that publish weight messages from a digital scale.
 - Version: 1.0.0
 - Weigher Package: weigher
+- Weigher Node Name: weigher
 - Weigher Launch File: weigher_launch.py
 - Weigher Messages:
   - Weight.msg
   - WeightArray.msg
 - Weigher Topics:
-  - /weight
-  - /weight_thresholded
-  - /weight_array
-  - /weight_array_thresholded
+  - /weigher/weight
+  - /weigher/weight_thresholded
+  - /weigher/weight_array
+  - /weigher/weight_array_thresholded
+- Weigher Service Files:
+  - Tare.srv
+- Weigher Services:
+  - /weigher/tare
 - Release Date: 2023-02-15
 - Creation Date: 2022-12-14
 - License: BSD-3-Clause
@@ -43,7 +50,7 @@
 ```
 
 
-<a id="orgd369d98"></a>
+<a id="orgd749486"></a>
 
 # Usage
 
@@ -65,10 +72,10 @@ On a computer connected to the same network as the Raspberry Pi, either use Dock
 
 ```sh
 docker run -it --net=host --pid=host weigher:latest ros2 topic list
-docker run -it --net=host --pid=host weigher:latest ros2 topic echo /weight
-docker run -it --net=host --pid=host weigher:latest ros2 topic echo /weight_thresholded
-docker run -it --net=host --pid=host weigher:latest ros2 topic echo /weight_array
-docker run -it --net=host --pid=host weigher:latest ros2 topic echo /weight_array_thresholded
+docker run -it --net=host --pid=host weigher:latest ros2 topic echo /weigher/weight
+docker run -it --net=host --pid=host weigher:latest ros2 topic echo /weigher/weight_thresholded
+docker run -it --net=host --pid=host weigher:latest ros2 topic echo /weigher/weight_array
+docker run -it --net=host --pid=host weigher:latest ros2 topic echo /weigher/weight_array_thresholded
 ```
 
 
@@ -77,10 +84,32 @@ docker run -it --net=host --pid=host weigher:latest ros2 topic echo /weight_arra
 ```sh
 source ~/ros2_ws/install/setup.bash
 ros2 topic list
-ros2 topic echo /weight
-ros2 topic echo /weight_thresholded
-ros2 topic echo /weight_array
-ros2 topic echo /weight_array_thresholded
+ros2 topic echo /weigher/weight
+ros2 topic echo /weigher/weight_thresholded
+ros2 topic echo /weigher/weight_array
+ros2 topic echo /weigher/weight_array_thresholded
+```
+
+
+## Services
+
+On a computer connected to the same network as the Raspberry Pi, either use Docker or install ROS 2 to use weigher services.
+
+
+### Docker
+
+```sh
+docker run -it --net=host --pid=host weigher:latest ros2 service list
+docker run -it --net=host --pid=host weigher:latest ros2 service call /weigher/tare weigher_interfaces/srv/Tare
+```
+
+
+### ROS 2 on Ubuntu
+
+```sh
+source ~/ros2_ws/install/setup.bash
+ros2 service list
+ros2 service call /weigher/tare weigher_interfaces/srv/Tare
 ```
 
 
@@ -110,7 +139,7 @@ echo-weight-array-thresholded
 ```
 
 
-<a id="org35f00da"></a>
+<a id="org2108268"></a>
 
 # Messages
 
@@ -138,7 +167,7 @@ Weight[] array
 ```
 
 
-<a id="org065560c"></a>
+<a id="orga47a18d"></a>
 
 # Topics
 
@@ -148,7 +177,7 @@ Weight[] array
 Send all messages from the digital scale one at a time along with a timestamp for that measurement.
 
 ```text
-$ ros2 topic echo /weight
+$ ros2 topic echo /weigher/weight
 ---
 stamp:
   sec: 1676470173
@@ -173,7 +202,7 @@ weight: 0.18143694800000004
 ```
 
 ```text
-$ ros2 topic hz /weight
+$ ros2 topic hz /weigher/weight
 average rate: 574.719
         min: 0.000s max: 0.038s std dev: 0.00568s window: 2338
 average rate: 576.536
@@ -186,7 +215,7 @@ average rate: 576.536
 Send some messages from the digital scale one at a time along with a timestamp for that measurement, if the weight value exceeds a threshold. The threshold value is set with the threshold parameter.
 
 ```text
-$ ros2 topic echo /weight_thresholded
+$ ros2 topic echo /weigher/weight_thresholded
 ---
 stamp:
   sec: 1676470255
@@ -211,7 +240,7 @@ weight: 498.5887331040001
 ```
 
 ```text
-$ ros2 topic hz /weight_thresholded
+$ ros2 topic hz /weigher/weight_thresholded
 average rate: 503.230
         min: 0.000s max: 0.054s std dev: 0.00695s window: 5102
 average rate: 503.906
@@ -224,7 +253,7 @@ average rate: 503.906
 Send an array of Weight messages to increase the size and decrease the frequency of messages published on this topic. The maximum array length is set by the weight\_array\_length\_max parameter.
 
 ```text
-$ ros2 topic echo /weight_array
+$ ros2 topic echo /weigher/weight_array
 ---
 array:
 - stamp:
@@ -248,7 +277,7 @@ array:
 ```
 
 ```text
-$ ros2 topic hz /weight_array
+$ ros2 topic hz /weigher/weight_array
 average rate: 0.287
         min: 3.460s max: 3.495s std dev: 0.01312s window: 4
 average rate: 0.288
@@ -265,7 +294,7 @@ Only include weight messages in the array if the weight value exceeds a threshol
 Do not send empty arrays.
 
 ```text
-$ ros2 topic echo /weight_array_thresholded
+$ ros2 topic echo /weigher/weight_array_thresholded
 ---
 array:
 - stamp:
@@ -289,7 +318,7 @@ array:
 ```
 
 ```text
-$ ros2 topic hz /weight_array_thresholded
+$ ros2 topic hz /weigher/weight_array_thresholded
 average rate: 0.251
         min: 3.933s max: 4.048s std dev: 0.04806s window: 4
 average rate: 0.251
@@ -297,7 +326,40 @@ average rate: 0.251
 ```
 
 
-<a id="orgdc7edf1"></a>
+<a id="orgb8e4e56"></a>
+
+# Service Files
+
+
+## Tare.srv
+
+```text
+# This file is generated automatically from metadata
+# File edits may be overwritten!
+
+---
+builtin_interfaces/Time stamp
+bool success
+```
+
+
+<a id="org4b41f24"></a>
+
+# Services
+
+
+## tare
+
+```text
+$ ros2 service call /weigher/tare weigher_interfaces/srv/Tare
+requester: making request: weigher_interfaces.srv.Tare_Request()
+
+response:
+weigher_interfaces.srv.Tare_Response(stamp=builtin_interfaces.msg.Time(sec=1676492636, nanosec=617772030), success=True)
+```
+
+
+<a id="org4c0754a"></a>
 
 # Setup
 
@@ -429,7 +491,7 @@ average rate: 0.251
     ```
 
 
-<a id="orgb112e13"></a>
+<a id="org244c638"></a>
 
 # Development
 
@@ -526,10 +588,10 @@ docker exec -it container-name bash
     ```sh
     # Open a new termial
     source ~/ros2_ws/install/setup.bash
-    ros2 topic echo /weight
-    ros2 topic echo /weight_thresholded
-    ros2 topic echo /weight_array
-    ros2 topic echo /weight_array_thresholded
+    ros2 topic echo /weigher/weight
+    ros2 topic echo /weigher/weight_thresholded
+    ros2 topic echo /weigher/weight_array
+    ros2 topic echo /weigher/weight_array_thresholded
     ```
 
 

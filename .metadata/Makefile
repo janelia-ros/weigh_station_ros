@@ -81,8 +81,8 @@ docker-publish-weight:
 
 .PHONY: docker-echo-weight-array
 docker-echo-weight-array:
-	$(DOCKER-CONTAINER) ros2 topic echo /weight_array
+	$(DOCKER-CONTAINER) ros2 topic echo /weigher/weight_array
 
 .PHONY: docker-echo-weight-array-thresholded
 docker-echo-weight-array-thresholded:
-	$(DOCKER-CONTAINER) ros2 topic echo /weight_array_thresholded
+	$(DOCKER-CONTAINER) ros2 topic echo /weigher/weight_array_thresholded

@@ -42,7 +42,7 @@ loadstar_sensors_interface
 #+END_SRC
 
 # Place multiple apt packages on one line separated by spaces
-#+NAME: host-apt-dependency-list
+#+NAME: pi-apt-dependency-list
 #+BEGIN_SRC text :exports none :noweb yes
 python3-filelock python3-docker python3-click
 #+END_SRC
@@ -247,21 +247,21 @@ Scale will be tared on power up and automatically begin publishing weight messag
 On a computer connected to the same network as the Raspberry Pi, either use
 Docker or install ROS 2 to subscribe to weight messages.
 
-*** Echo weight topics on network computer
-
-**** Docker
+*** Docker
 
 #+BEGIN_SRC sh :noweb yes
+docker run -it --net=host --pid=host <<docker-image-name>> ros2 topic list
 docker run -it --net=host --pid=host <<docker-image-name>> ros2 topic echo /weight
 docker run -it --net=host --pid=host <<docker-image-name>> ros2 topic echo /weight_thresholded
 docker run -it --net=host --pid=host <<docker-image-name>> ros2 topic echo /weight_array
 docker run -it --net=host --pid=host <<docker-image-name>> ros2 topic echo /weight_array_thresholded
 #+END_SRC
 
-**** ROS 2 on Ubuntu
+*** ROS 2 on Ubuntu
 
 #+BEGIN_SRC sh :noweb yes
 source <<ros-workspace-path>>/install/setup.bash
+ros2 topic list
 ros2 topic echo <<weigher-topics>>
 #+END_SRC
 
@@ -567,11 +567,11 @@ cd ~/<<repository-name>> && \
 make -f .metadata/Makefile docker-image
 #+END_SRC
 
-**** Host Setup
+**** Pi Setup
 
 #+BEGIN_SRC sh :noweb yes
 cd ~/<<repository-name>> && \
-make -f .metadata/Makefile host-setup
+make -f .metadata/Makefile pi-setup
 sudo reboot
 #+END_SRC
 
@@ -678,7 +678,7 @@ ros2 topic echo <<weigher-topics>>
 cd ~/weigher_ros
 git pull
 make -f .metadata/Makefile docker-image
-make -f .metadata/Makefile host-setup
+make -f .metadata/Makefile pi-setup
 sudo reboot
 #+END_SRC
 
@@ -808,13 +808,13 @@ ros-build:
 	source src/<<repository-name>>/.metadata/setup.bash;\
 	colcon build --symlink-install
 
-.PHONY: host-apt-dependencies
-host-apt-dependencies:
-	sudo apt install -y <<host-apt-dependency-list>>;\
+.PHONY: pi-apt-dependencies
+pi-apt-dependencies:
+	sudo apt install -y <<pi-apt-dependency-list>>;\
 
-.PHONY: host-setup
-host-setup: host-apt-dependencies
-	python3 .metadata/host/host_setup.py install;\
+.PHONY: pi-setup
+pi-setup: pi-apt-dependencies
+	python3 .metadata/pi/pi_setup.py install;\
 	sudo chmod +x /usr/local/bin/find_device_then_run.py;\
 	sudo chmod +x /usr/local/bin/echo-weight;\
 
@@ -942,7 +942,7 @@ RUN sed --in-place --expression \
 #+BEGIN_SRC text :tangle COLCON_IGNORE :exports none :noweb yes
 #+END_SRC
 
-#+BEGIN_SRC python :tangle host/host_setup.py :exports none :noweb yes
+#+BEGIN_SRC python :tangle pi/pi_setup.py :exports none :noweb yes
 # This file is generated automatically from metadata
 # File edits may be overwritten!
 
@@ -951,11 +951,11 @@ import click
 import subprocess
 from pathlib import Path
 
-class HostSetup(object):
+class PiSetup(object):
 
     def __init__(self,dry_run,*args,**kwargs):
         self.dry_run = dry_run
-        self.root_name = '.metadata/host/root'
+        self.root_name = '.metadata/pi/root'
         self.path = Path(self.root_name)
 
     def _output(self,args):
@@ -987,29 +987,29 @@ def cli(ctx,dry_run):
     if dry_run:
         click.echo('Dry Run')
 
-    host_setup = HostSetup(dry_run)
+    pi_setup = PiSetup(dry_run)
 
     ctx.ensure_object(dict)
-    ctx.obj['HOST_SETUP'] = host_setup
+    ctx.obj['PI_SETUP'] = pi_setup
 
 @cli.command()
 @click.pass_context
 def install(ctx):
     click.echo('Installing')
-    ctx.obj['HOST_SETUP'].install()
+    ctx.obj['PI_SETUP'].install()
 
 @cli.command()
 @click.pass_context
 def uninstall(ctx):
     click.echo('Uninstalling')
-    ctx.obj['HOST_SETUP'].uninstall()
+    ctx.obj['PI_SETUP'].uninstall()
 
 # -----------------------------------------------------------------------------------------
 if __name__ == '__main__':
     cli(obj={})
 #+END_SRC
 
-#+HEADER: :tangle (if tangle-external-files "host/root/etc/systemd/system/weigher-attached@.service" "no")
+#+HEADER: :tangle (if tangle-external-files "pi/root/etc/systemd/system/weigher-attached@.service" "no")
 #+BEGIN_SRC text :exports none :noweb yes
 [Unit]
 Description=Weigher attached
@@ -1023,18 +1023,18 @@ Environment=PYTHONUNBUFFERED=1
 ExecStart=/usr/local/bin/find_device_then_run.py
 #+END_SRC
 
-#+HEADER: :tangle (if tangle-external-files "host/root/etc/udev/rules.d/50-ft232.rules" "no")
+#+HEADER: :tangle (if tangle-external-files "pi/root/etc/udev/rules.d/50-ft232.rules" "no")
 #+BEGIN_SRC text :exports none :noweb yes
 # Original FT232/FT245 VID:PID
 ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", MODE="0666", ENV{ID_MM_DEVICE_IGNORE}="1", ENV{ID_MM_PORT_IGNORE}="1"
 #+END_SRC
 
-#+HEADER: :tangle (if tangle-external-files "host/root/etc/udev/rules.d/99-weigher.rules" "no")
+#+HEADER: :tangle (if tangle-external-files "pi/root/etc/udev/rules.d/99-weigher.rules" "no")
 #+BEGIN_SRC text :exports none :noweb yes
 KERNEL=="ttyUSB*", TAG+="systemd", ENV{SYSTEMD_WANTS}="weigher-attached@00.service"
 #+END_SRC
 
-#+HEADER: :tangle (if tangle-external-files "host/root/usr/local/bin/find_device_then_run.py" "no")
+#+HEADER: :tangle (if tangle-external-files "pi/root/usr/local/bin/find_device_then_run.py" "no")
 #+BEGIN_SRC python :exports none :noweb yes
 #!/usr/bin/env python3
 
@@ -1108,7 +1108,7 @@ if __name__ == '__main__':
     cli()
 #+END_SRC
 
-#+HEADER: :tangle (if tangle-external-files "host/root/usr/local/bin/echo-weight" "no")
+#+HEADER: :tangle (if tangle-external-files "pi/root/usr/local/bin/echo-weight" "no")
 #+BEGIN_SRC sh :exports none :noweb yes
 #!/bin/bash
 make -f /home/weigher/<<repository-name>>/.metadata/Makefile docker-echo-weight

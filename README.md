@@ -1,15 +1,15 @@
-- [About](#orge337e01)
-- [Usage](#orgcfa0cb7)
-- [Messages](#org6d99545)
-- [Topics](#org8f1a8a9)
-- [Setup](#orgd923ba5)
-- [Development](#orgc452261)
+- [About](#orgad57c71)
+- [Usage](#orgd369d98)
+- [Messages](#org35f00da)
+- [Topics](#org065560c)
+- [Setup](#orgdc7edf1)
+- [Development](#orgb112e13)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="orge337e01"></a>
+<a id="orgad57c71"></a>
 
 # About
 
@@ -43,7 +43,7 @@
 ```
 
 
-<a id="orgcfa0cb7"></a>
+<a id="orgd369d98"></a>
 
 # Usage
 
@@ -110,7 +110,7 @@ echo-weight-array-thresholded
 ```
 
 
-<a id="org6d99545"></a>
+<a id="org35f00da"></a>
 
 # Messages
 
@@ -138,7 +138,7 @@ Weight[] array
 ```
 
 
-<a id="org8f1a8a9"></a>
+<a id="org065560c"></a>
 
 # Topics
 
@@ -297,7 +297,7 @@ average rate: 0.251
 ```
 
 
-<a id="orgd923ba5"></a>
+<a id="orgdc7edf1"></a>
 
 # Setup
 
@@ -425,10 +425,11 @@ average rate: 0.251
     systemctl status docker
     systemctl status weigher-attached@00.service
     systemd-analyze plot > boot_analysis.svg
+    docker container list
     ```
 
 
-<a id="orgc452261"></a>
+<a id="orgb112e13"></a>
 
 # Development
 

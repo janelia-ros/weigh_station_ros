@@ -582,6 +582,7 @@ sudo reboot
 systemctl status docker
 systemctl status weigher-attached@00.service
 systemd-analyze plot > boot_analysis.svg
+docker container list
 #+END_SRC
 
 * Development

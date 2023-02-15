@@ -308,6 +308,7 @@ Send all messages from the digital scale one at a time along with a timestamp
 for that measurement.
 
 #+BEGIN_SRC text :noweb yes
+$ ros2 topic echo /weight
 ---
 stamp:
   sec: 1676470173
@@ -346,6 +347,7 @@ for that measurement, if the weight value exceeds a threshold. The threshold
 value is set with the threshold parameter.
 
 #+BEGIN_SRC text :noweb yes
+$ ros2 topic echo /weight_thresholded
 ---
 stamp:
   sec: 1676470255
@@ -384,6 +386,7 @@ of messages published on this topic. The maximum array length is set by the
 weight_array_length_max parameter.
 
 #+BEGIN_SRC text :noweb yes
+$ ros2 topic echo /weight_array
 ---
 array:
 - stamp:
@@ -426,6 +429,7 @@ threshold. The threshold value is set with the threshold parameter.
 Do not send empty arrays.
 
 #+BEGIN_SRC text :noweb yes
+$ ros2 topic echo /weight_array_thresholded
 ---
 array:
 - stamp:

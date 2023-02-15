@@ -1,15 +1,15 @@
-- [About](#orgcffc979)
-- [Usage](#org78a42bb)
-- [Messages](#orgf4f5c83)
-- [Topics](#orgeacdce3)
-- [Setup](#org89a3f04)
-- [Development](#org28435d2)
+- [About](#org4a2d997)
+- [Usage](#orgbe6356c)
+- [Messages](#org5bd9490)
+- [Topics](#org9e13693)
+- [Setup](#org740236a)
+- [Development](#org132a132)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="orgcffc979"></a>
+<a id="org4a2d997"></a>
 
 # About
 
@@ -43,7 +43,7 @@
 ```
 
 
-<a id="org78a42bb"></a>
+<a id="orgbe6356c"></a>
 
 # Usage
 
@@ -108,7 +108,7 @@ echo-weight
 ```
 
 
-<a id="orgf4f5c83"></a>
+<a id="org5bd9490"></a>
 
 # Messages
 
@@ -136,7 +136,7 @@ Weight[] array
 ```
 
 
-<a id="orgeacdce3"></a>
+<a id="org9e13693"></a>
 
 # Topics
 
@@ -146,6 +146,7 @@ Weight[] array
 Send all messages from the digital scale one at a time along with a timestamp for that measurement.
 
 ```text
+$ ros2 topic echo /weight
 ---
 stamp:
   sec: 1676470173
@@ -183,6 +184,7 @@ average rate: 576.536
 Send some messages from the digital scale one at a time along with a timestamp for that measurement, if the weight value exceeds a threshold. The threshold value is set with the threshold parameter.
 
 ```text
+$ ros2 topic echo /weight_thresholded
 ---
 stamp:
   sec: 1676470255
@@ -220,6 +222,7 @@ average rate: 503.906
 Send an array of Weight messages to increase the size and decrease the frequency of messages published on this topic. The maximum array length is set by the weight\_array\_length\_max parameter.
 
 ```text
+$ ros2 topic echo /weight_array
 ---
 array:
 - stamp:
@@ -260,6 +263,7 @@ Only include weight messages in the array if the weight value exceeds a threshol
 Do not send empty arrays.
 
 ```text
+$ ros2 topic echo /weight_array_thresholded
 ---
 array:
 - stamp:
@@ -291,7 +295,7 @@ average rate: 0.251
 ```
 
 
-<a id="org89a3f04"></a>
+<a id="org740236a"></a>
 
 # Setup
 
@@ -422,7 +426,7 @@ average rate: 0.251
     ```
 
 
-<a id="org28435d2"></a>
+<a id="org132a132"></a>
 
 # Development
 

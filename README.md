@@ -1,15 +1,15 @@
-- [About](#orgfbabe94)
-- [Usage](#org2c7fe4d)
-- [Messages](#org330063d)
-- [Topics](#orgc6aaaac)
-- [Setup](#orgd046ae5)
-- [Development](#org3e6c868)
+- [About](#orge337e01)
+- [Usage](#orgcfa0cb7)
+- [Messages](#org6d99545)
+- [Topics](#org8f1a8a9)
+- [Setup](#orgd923ba5)
+- [Development](#orgc452261)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="orgfbabe94"></a>
+<a id="orge337e01"></a>
 
 # About
 
@@ -43,7 +43,7 @@
 ```
 
 
-<a id="org2c7fe4d"></a>
+<a id="orgcfa0cb7"></a>
 
 # Usage
 
@@ -102,14 +102,15 @@ ssh weigher@weigher.local
 -   password:
 
 
-### Echo weight topic in Raspberry Pi terminal
+### Echo weight array topics in Raspberry Pi terminal
 
 ```sh
-echo-weight
+echo-weight-array
+echo-weight-array-thresholded
 ```
 
 
-<a id="org330063d"></a>
+<a id="org6d99545"></a>
 
 # Messages
 
@@ -137,7 +138,7 @@ Weight[] array
 ```
 
 
-<a id="orgc6aaaac"></a>
+<a id="org8f1a8a9"></a>
 
 # Topics
 
@@ -296,7 +297,7 @@ average rate: 0.251
 ```
 
 
-<a id="orgd046ae5"></a>
+<a id="orgd923ba5"></a>
 
 # Setup
 
@@ -427,7 +428,7 @@ average rate: 0.251
     ```
 
 
-<a id="org3e6c868"></a>
+<a id="orgc452261"></a>
 
 # Development
 
@@ -459,7 +460,7 @@ make -f .metadata/Makefile docker-publish-weight
 ### Run Docker container and echo weight messages
 
 ```sh
-make -f .metadata/Makefile docker-echo-weight
+make -f .metadata/Makefile docker-echo-weight-array
 ```
 
 

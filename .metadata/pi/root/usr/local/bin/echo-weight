@@ -1,2 +1,0 @@
-#!/bin/bash
-make -f /home/weigher/weigher_ros/.metadata/Makefile docker-echo-weight

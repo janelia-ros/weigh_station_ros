@@ -251,6 +251,7 @@ Python 3
   - <<weigher-service-files>>
 - Weigher Services:
   - <<weigher-services>>
+- Docker Image Name: <<docker-image-name>>
 - Release Date: <<release-date>>
 - Creation Date: <<creation-date>>
 - License: <<license>>

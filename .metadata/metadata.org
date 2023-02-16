@@ -187,6 +187,11 @@ https://<<forge>>/<<repository-organization>>/<<repository-name>>
 git@<<forge>>:<<repository-organization>>/<<repository-name>>.git
 #+END_SRC
 
+#+NAME: git-clone-url-https
+#+BEGIN_SRC text :exports none :noweb yes
+<<repository-url>>.git
+#+END_SRC
+
 #+NAME: author-given-name
 #+BEGIN_SRC text :exports none :noweb yes
 Peter
@@ -538,7 +543,7 @@ weigher_interfaces.srv.Tare_Response(stamp=builtin_interfaces.msg.Time(sec=16764
 **** Clone this repository
 
 #+BEGIN_SRC sh :noweb yes
-git clone <<git-clone-url-ssh>>
+git clone <<git-clone-url-https>>
 #+END_SRC
 
 **** Make Docker image
@@ -563,7 +568,7 @@ https://docs.ros.org/en/<<ros-distribution>>/Installation/Ubuntu-Install-Debians
 #+BEGIN_SRC sh :noweb yes
 mkdir -p <<ros-workspace-path>>/src && \
 cd <<ros-workspace-path>>/src && \
-git clone <<git-clone-url-ssh>>
+git clone <<git-clone-url-https>>
 #+END_SRC
 
 **** Setup Python virtualenv
@@ -831,7 +836,7 @@ GUIX-TIME-MACHINE = guix time-machine -C $(MAKEFILE_DIR)/guix/channels.scm
 GUIX-SHELL = $(GUIX-TIME-MACHINE) -- shell -m $(MAKEFILE_DIR)/guix/manifest.scm
 CONTAINER = --container --preserve='^DISPLAY$$' --preserve='^TERM$$'
 GUIX-CONTAINER = $(GUIX-SHELL) $(CONTAINER)
-VENV-SHELL = rm -rf <<virtualenv-path>>; mkdir <<virtualenv-path>>; python3 -m venv <<virtualenv-path>>; source <<virtualenv-path>>/bin/activate
+VENV-SHELL = rm -rf <<virtualenv-path>> && mkdir <<virtualenv-path>> && python3 -m venv <<virtualenv-path>> && source <<virtualenv-path>>/bin/activate
 DOCKER-IMAGE = docker build -f $(MAKEFILE_DIR)/docker/Dockerfile -t <<docker-image-name>> .
 DOCKER-IMAGE-DEBUG = docker build -f $(MAKEFILE_DIR)/docker/Dockerfile --no-cache --progress=plain -t <<docker-image-name>> .
 DOCKER-CONTAINER = docker run -it --net=host --pid=host <<docker-image-name>>
@@ -842,11 +847,11 @@ guix-container:
 
 .PHONY: requirements.txt
 requirements.txt:
-	$(GUIX-CONTAINER) -- $(VENV-SHELL) &&\
+	$(GUIX-CONTAINER) --network -- sh -c "$(VENV-SHELL) &&\
 	pip install <<python-dependency-list>> &&\
 	pip freeze --local > requirements.txt &&\
 	deactivate &&\
-	rm -rf <<virtualenv-path>>
+	rm -rf <<virtualenv-path>>"
 
 .PHONY: docker-image
 docker-image:

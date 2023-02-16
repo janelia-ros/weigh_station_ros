@@ -4,7 +4,7 @@
     "license": "https://spdx.org/licenses/BSD-3-Clause",
     "codeRepository": "https://github.com/janelia-ros/weigher_ros",
     "dateCreated": "2022-12-14",
-    "dateModified": "2023-02-15",
+    "dateModified": "2023-02-16",
     "name": "weigher_ros",
     "version": "1.0.0",
     "description": "This repository contains ROS 2 packages that publish weight messages from a digital scale.",

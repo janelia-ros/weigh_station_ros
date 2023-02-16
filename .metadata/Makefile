@@ -7,7 +7,7 @@ GUIX-TIME-MACHINE = guix time-machine -C $(MAKEFILE_DIR)/guix/channels.scm
 GUIX-SHELL = $(GUIX-TIME-MACHINE) -- shell -m $(MAKEFILE_DIR)/guix/manifest.scm
 CONTAINER = --container --preserve='^DISPLAY$$' --preserve='^TERM$$'
 GUIX-CONTAINER = $(GUIX-SHELL) $(CONTAINER)
-VENV-SHELL = rm -rf .venv; mkdir .venv; python3 -m venv .venv; source .venv/bin/activate
+VENV-SHELL = rm -rf .venv && mkdir .venv && python3 -m venv .venv && source .venv/bin/activate
 DOCKER-IMAGE = docker build -f $(MAKEFILE_DIR)/docker/Dockerfile -t weigher:humble .
 DOCKER-IMAGE-DEBUG = docker build -f $(MAKEFILE_DIR)/docker/Dockerfile --no-cache --progress=plain -t weigher:humble .
 DOCKER-CONTAINER = docker run -it --net=host --pid=host weigher:humble
@@ -18,11 +18,11 @@ guix-container:
 
 .PHONY: requirements.txt
 requirements.txt:
-	$(GUIX-CONTAINER) -- $(VENV-SHELL) &&\
+	$(GUIX-CONTAINER) --network -- sh -c "$(VENV-SHELL) &&\
 	pip install loadstar_sensors_interface &&\
 	pip freeze --local > requirements.txt &&\
 	deactivate &&\
-	rm -rf .venv
+	rm -rf .venv"
 
 .PHONY: docker-image
 docker-image:

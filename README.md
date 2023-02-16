@@ -1,17 +1,17 @@
-- [About](#org61b06c9)
-- [Usage](#org78ad014)
-- [Messages](#org1cf1227)
-- [Topics](#org5ed5dbe)
-- [Service Files](#org9c9dcf2)
-- [Services](#org8cfe91e)
-- [Setup](#orgbe46822)
-- [Development](#orge1832d3)
+- [About](#org7e2d7b8)
+- [Usage](#orgc1dc710)
+- [Messages](#org2f08510)
+- [Topics](#org850e355)
+- [Service Files](#org2b5abdd)
+- [Services](#orge604e39)
+- [Setup](#org7fb51d6)
+- [Development](#org221dbea)
 
     <!-- This file is generated automatically from metadata -->
     <!-- File edits may be overwritten! -->
 
 
-<a id="org61b06c9"></a>
+<a id="org7e2d7b8"></a>
 
 # About
 
@@ -38,7 +38,7 @@
 - Weigher Services:
   - /weigher/tare
 - Docker Image Name: weigher:humble
-- Release Date: 2023-02-15
+- Release Date: 2023-02-16
 - Creation Date: 2022-12-14
 - License: BSD-3-Clause
 - URL: https://github.com/janelia-ros/weigher_ros
@@ -51,7 +51,7 @@
 ```
 
 
-<a id="org78ad014"></a>
+<a id="orgc1dc710"></a>
 
 # Usage
 
@@ -132,7 +132,7 @@ ssh weigher@weigher.local
 -   password:
 
 
-<a id="org1cf1227"></a>
+<a id="org2f08510"></a>
 
 # Messages
 
@@ -160,7 +160,7 @@ Weight[] array
 ```
 
 
-<a id="org5ed5dbe"></a>
+<a id="org850e355"></a>
 
 # Topics
 
@@ -319,7 +319,7 @@ average rate: 0.251
 ```
 
 
-<a id="org9c9dcf2"></a>
+<a id="org2b5abdd"></a>
 
 # Service Files
 
@@ -336,7 +336,7 @@ bool success
 ```
 
 
-<a id="org8cfe91e"></a>
+<a id="orge604e39"></a>
 
 # Services
 
@@ -352,7 +352,7 @@ weigher_interfaces.srv.Tare_Response(stamp=builtin_interfaces.msg.Time(sec=16764
 ```
 
 
-<a id="orgbe46822"></a>
+<a id="org7fb51d6"></a>
 
 # Setup
 
@@ -369,7 +369,7 @@ weigher_interfaces.srv.Tare_Response(stamp=builtin_interfaces.msg.Time(sec=16764
 2.  Clone this repository
 
     ```sh
-    git clone git@github.com:janelia-ros/weigher_ros.git
+    git clone https://github.com/janelia-ros/weigher_ros.git
     ```
 
 3.  Make Docker image
@@ -395,7 +395,7 @@ weigher_interfaces.srv.Tare_Response(stamp=builtin_interfaces.msg.Time(sec=16764
     ```sh
     mkdir -p ~/ros2_ws/src && \
     cd ~/ros2_ws/src && \
-    git clone git@github.com:janelia-ros/weigher_ros.git
+    git clone https://github.com/janelia-ros/weigher_ros.git
     ```
 
 3.  Setup Python virtualenv
@@ -484,7 +484,7 @@ weigher_interfaces.srv.Tare_Response(stamp=builtin_interfaces.msg.Time(sec=16764
     ```
 
 
-<a id="orge1832d3"></a>
+<a id="org221dbea"></a>
 
 # Development
 

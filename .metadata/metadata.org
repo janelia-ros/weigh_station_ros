@@ -169,7 +169,7 @@ LICENSE
 
 #+NAME: repository-organization
 #+BEGIN_SRC text :exports none :noweb yes
-janelia-ros
+RatCity-Habitat
 #+END_SRC
 
 #+NAME: forge
